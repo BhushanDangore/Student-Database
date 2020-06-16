@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install && cd ./client && npm install && npm run build && cd ..",
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "npm install && cd ./client && npm install && npm run build && cd .."
   },
   "author": "",
   "license": "ISC",
