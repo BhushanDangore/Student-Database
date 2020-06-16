@@ -1,2 +1,1 @@
-local: cd client/ && npm run build
-local2: cd .. && heroku local
+web: cd client/ && npm run build && cd .. && npm start
