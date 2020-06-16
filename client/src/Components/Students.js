@@ -1,44 +1,19 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Paper, makeStyles, Typography, Fab, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Button, LinearProgress, TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core'
-import AddIcon from '@material-ui/icons/Add';
+import {
+    Dialog, 
+    DialogTitle, 
+    DialogContent, 
+    DialogActions, 
+    Button, 
+    LinearProgress 
+} from '@material-ui/core'
 import AddStudentForm from './Miniatures/AddStudentForm';
 import { appStateContext } from '../Contexts';
 import { getClasses, getStudents } from '../Actions';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        padding: theme.spacing(2),
-        margin: `${theme.spacing(4)}px auto`,
-    },
-    fab: {
-        position: "sticky",
-        bottom: "16px",
-        marginLeft: "calc(100% - 48px)",
-        marginTop: "16px"
-    },
-    form: {
-        '& > *': {
-            margin: `${theme.spacing(1)}px 0`,
-        },
-        margin: `${theme.spacing(1)}px 0`,
-    },
-    dialogContainer: {
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-        padding: theme.spacing(2),
-        boxSizing: 'border-box'
-    },
-    multifields: {
-        display: "flex",
-        '& > *': {
-            flex: 1,
-        },
-    }
-}))
+import FormatedTable from './Miniatures/FormatedTable';
+import PageContainer from './Miniatures/PageContainer';
 
 export default function Students() {
-    const classes = useStyles();
 
     const { appState, dispatch } = useContext(appStateContext);
 
@@ -66,45 +41,30 @@ export default function Students() {
         setConfig({ ...config, addStudentDialogOpen: !config.addStudentDialogOpen });
     }
 
+    const createStudentInfoArray = () => {
+        let students = [];
+        if(!(appState.students instanceof Array)) return null;
+        appState.students.forEach(stud => {
+            students.push((({
+                name: { firstName, lastName },
+                rollNo,
+                class: { className }
+            }) => ({name: `${firstName} ${lastName}`, rollNo, className }))(stud))
+        });
+        return students;
+    }
+
+    const reducedStudentsObject = React.useMemo(createStudentInfoArray, [appState.students]);
+
     return (
         <React.Fragment>
-            <Paper variant="outlined" className={classes.root} style={{ position: "relative" }}>
-                <Typography variant='h4' color='textSecondary' display='inline'>Students Section</Typography>
-                <Divider style={{ margin: "15px 0px" }} />
-
+            <PageContainer onFabClick={toggleFAB} addClassDialogOpen={config.addClassDialogOpen} pageTitle="Classes Section" >
                 {
                     config.loading ? <LinearProgress /> :
                         <React.Fragment>
                             {
-                                <TableContainer>
-                                    <Table size="small" aria-label="a dense table">
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>Name</TableCell>
-                                                <TableCell>Class</TableCell>
-                                                <TableCell>Gender</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {
-                                                appState.students.length === 0 ? <TableRow ><TableCell colSpan={3} >No Record Found.</TableCell></TableRow> : null
-                                            }
-                                            {
-                                                appState.students.map((stud, i) => (
-                                                    <TableRow key={i}>
-                                                        <TableCell component="th" scope="row">{ `${stud.name.firstName} ${stud.name.lastName}` }</TableCell>
-                                                        <TableCell align="left">{stud.class.className}</TableCell>
-                                                        <TableCell align="left">{stud.gender}</TableCell>
-                                                    </TableRow>
-                                                ))
-                                            }
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
+                                <FormatedTable tableData={reducedStudentsObject} headerData={["Name", "Roll No", "Class"]} />
                             }
-                            <Fab color="primary" aria-label="add" size="medium" className={classes.fab} onClick={toggleFAB}>
-                                <AddIcon />
-                            </Fab>
                             <Dialog open={config.noClassesInProfileDialog} onClose={() => { setConfig({ ...config, noClassesInProfileDialog: false }) }}>
                                 <DialogTitle>We need Some More Data</DialogTitle>
                                 <DialogContent>In order to create student you will need to add class first</DialogContent>
@@ -115,7 +75,7 @@ export default function Students() {
                             <AddStudentForm open={config.addStudentDialogOpen} toggleFAB={toggleFAB} />
                         </React.Fragment>
                 }
-            </Paper>
+            </PageContainer>
         </React.Fragment>
     )
 }

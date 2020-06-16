@@ -10,7 +10,7 @@ Router.route("/")
             console.log("HIT");
             const user = await req.user.populate({ 
                 path: 'students', select: '-_id -belongsTo -__v',
-                populate: { path: 'class', select: '-_id -belongsTo -classNumber -__v' },
+                populate: { path: 'class', select: '-_id -belongsTo -classNumber -students -__v' },
             }).execPopulate();
             res.status(200).json(user.students);
         }
