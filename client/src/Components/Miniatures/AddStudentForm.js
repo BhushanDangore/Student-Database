@@ -117,7 +117,7 @@ export default function AddStudentForm({ open, toggleFAB }) {
                         label='First Name'
                         id="FName"
                         value={student.name.firstName}
-                        onChange={(e) => {setStudent({...student, name: { ...student.name, firstName: e.target.value }})}}
+                        onChange={ e => setStudent({...student, name: { ...student.name, firstName: e.target.value }})}
                         error={student.name.firstName === "" && error} />
                     <TextField
                         placeholder='Last Name'

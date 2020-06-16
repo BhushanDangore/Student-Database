@@ -106,7 +106,7 @@ export default function Students() {
                                 <AddIcon />
                             </Fab>
                             <Dialog open={config.noClassesInProfileDialog} onClose={() => { setConfig({ ...config, noClassesInProfileDialog: false }) }}>
-                                <DialogTitle>You need to configure your profile first</DialogTitle>
+                                <DialogTitle>We need Some More Data</DialogTitle>
                                 <DialogContent>In order to create student you will need to add class first</DialogContent>
                                 <DialogActions>
                                     <Button onClick={() => setConfig({ ...config, noClassesInProfileDialog: false })} >Okey</Button>

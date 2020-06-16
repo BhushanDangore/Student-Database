@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
-import { makeStyles, Paper, Typography, Divider, Fab, TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
+import { makeStyles, Paper, Typography, Divider, Fab, TableContainer, Table, TableHead, TableBody, TableCell, TableRow, LinearProgress } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { appStateContext } from '../Contexts';
 import AddClassForm from './Miniatures/AddClassForm';
 import { getClasses } from '../Actions';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,12 +46,14 @@ export default function Classes() {
     const { appState, dispatch } = React.useContext(appStateContext);
     const [config, setConfig] = React.useState({
         addClassDialogOpen: false,
+        loading: true,
     })
 
     useEffect(() => {
-        if(appState.classes) return;
+        if(appState.classes) return setConfig({...config, loading: false});
         getClasses(dispatch);
-        setConfig({ addClassDialogOpen: false });
+        setConfig({ addClassDialogOpen: false, ...config });
+
         // eslint-disable-next-line
     }, [appState.classes])
 
@@ -73,10 +76,17 @@ export default function Classes() {
                             appState.classes.length === 0 ? <TableRow ><TableCell colSpan={2} >No Record Found.</TableCell></TableRow> : null
                         }
                         {appState.classes.map(row => (
-                            <TableRow key={row.classNumber}>
-                                <TableCell component="th" scope="row">{row.className}</TableCell>
+                            <Link 
+                                to={"classes/"+row.className} 
+                                key={row.classNumber} 
+                                style={{color: "inherit", 
+                                        display: "table-row", 
+                                        outline: 0, 
+                                        verticalAlign: "middle"}
+                                }>
+                                <TableCell scope="row">{row.className}</TableCell>
                                 <TableCell align="left">{row.classNumber}</TableCell>
-                            </TableRow>
+                            </Link>
                         ))}
                     </TableBody>
                 </Table>
@@ -90,7 +100,7 @@ export default function Classes() {
                 <Typography variant='h4' color='textSecondary' display='inline'>Classes Section</Typography>
                 <Divider style={{ margin: "15px 0px" }} />
                 {
-                    appState.classes ? getClassesTable() : null
+                    appState.classes ? getClassesTable() : config.loading ? <LinearProgress /> : null
                 }
                 <Fab color="primary" aria-label="add" size="medium" className={classes.fab} onClick={toggleFAB}>
                     <AddIcon />
