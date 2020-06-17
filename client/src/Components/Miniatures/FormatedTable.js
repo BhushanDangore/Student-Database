@@ -1,8 +1,16 @@
 import React from 'react'
-import { TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { withStyles, TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
+import { Link, useRouteMatch } from 'react-router-dom';
 
-function FormatedTable({ tableData, size = "small", headerData, prefixPath = "", linkPathIdentifire }) {
+const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+}))(TableRow);
+
+function FormatedTable({ tableData, size = "medium", headerData, linkPathIdentifire }) {
 
     if (!(tableData instanceof Array) || !(headerData instanceof Array)) throw new Error("tableData And headerData Are Required Fields of type Array")
 
@@ -22,32 +30,33 @@ function FormatedTable({ tableData, size = "small", headerData, prefixPath = "",
         )
 
     }
-    console.log(tableData[0])
 
+    let { url } = useRouteMatch();
+    
     return (
         <TableContainer>
-            <Table size={size} component='div' >
+            <Table size={size} component='div' stickyHeader >
                 <TableHead component='div'>
-                    <TableRow component='div'>
+                    <StyledTableRow component='div'>
                         {createRowOfObject(tableData[0])}
-                    </TableRow>
+                    </StyledTableRow>
                 </TableHead>
                 <TableBody component='div' >
                     {
-                        tableData.length === 0 ? <TableRow component='div' ><TableCell colSpan={headerData.length} component='div' >No Record Found.</TableCell></TableRow> :
-                            tableData.map((obj, indx) => {
+                        tableData.length === 0 ? <TableRow component='div'  ><TableCell component='div' style={{borderBottom: "none"}} >No Record Found.</TableCell></TableRow> :
+                        tableData.map((obj, indx) => {
                                     return (linkPathIdentifire ? 
                                     <Link
                                         key={indx}
-                                        to={prefixPath+ "/" + obj[linkPathIdentifire]}
+                                        to={`${url}/${obj[linkPathIdentifire]}`}
                                         style={LinkStyles}
                                     >
                                         {   Object.values(obj).map((val, indx) => (<TableCell key={indx} component='div' >{val}</TableCell>))   }
                                     </Link>
                                     :
-                                    <TableRow key={indx} component='div' >
+                                    <StyledTableRow key={indx} component='div' >
                                         {   Object.values(obj).map((val, indx) => (<TableCell key={indx} component='div' >{val}</TableCell>))   }
-                                    </TableRow>
+                                    </StyledTableRow>
                                 )}
                             
                             )}
@@ -57,4 +66,4 @@ function FormatedTable({ tableData, size = "small", headerData, prefixPath = "",
     )
 }
 
-export default FormatedTable;
+export default React.memo(FormatedTable);

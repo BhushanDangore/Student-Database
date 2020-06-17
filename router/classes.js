@@ -51,8 +51,8 @@ Router.post("/class", async (req, res) => {
 
             await req.user.save();
             
-            const updatedUser = req.user.populate('classes').execPopulate();
-            
+            const updatedUser = await req.user.populate({ path: 'classes', select: '-_id -belongsTo -students -__v' }).execPopulate();
+
             res.status(201).json( updatedUser.classes )
         })
     } catch(err) {

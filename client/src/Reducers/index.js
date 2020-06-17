@@ -22,7 +22,6 @@ function classesReducer(state, action) {
             return action.payload;
 
         case SAVE_CLASS:
-            console.log(action.payload);
             return action.payload;
         
         default:

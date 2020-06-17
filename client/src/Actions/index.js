@@ -46,7 +46,9 @@ export function saveClassDataInDB( classData, dispatch ) {
         },
         data: JSON.stringify(classData),
     })
-    .then(res => dispatch({ type: SAVE_CLASS, payload: res.data }) )
+    .then(res => {
+        dispatch({ type: SAVE_CLASS, payload: res.data })
+    } )
     .catch( res => dispatch({ type: REQUEST_FAILED, payload: res.data }) )
 }
 

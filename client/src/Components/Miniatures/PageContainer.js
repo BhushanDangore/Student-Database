@@ -16,20 +16,23 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function PageContainer(props) {
-    const {onFabClick, pageTitle} = props;
+    const {onFabClick, pageTitle, noFab} = props;
     const classes = useStyles();
 
     return (
         <React.Fragment>
-            <Paper variant="outlined" className={classes.root} style={{ position: "relative" }} >
+            <Paper variant="outlined" className={classes.root} style={{ position: "relative" }}>
                 <Typography variant='h4' color='textSecondary' display='inline'>{ pageTitle }</Typography>
                 <Divider style={{ margin: "15px 0px" }} />
                 {
                     props.children
                 }
-                <Fab color="primary" aria-label="add" size="medium" className={classes.fab} onClick={onFabClick}>
-                    <AddIcon />
-                </Fab>
+                {
+                    noFab ? null : 
+                    <Fab color="primary" aria-label="add" size="medium" className={classes.fab} onClick={onFabClick}>
+                        <AddIcon />
+                    </Fab>
+                }
             </Paper>
         </React.Fragment>
     )

@@ -6,7 +6,7 @@ import ResponsiveDrawer from './Components/ResponsiveDrawer';
 import { CssBaseline, Container, makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { useLocalStorage } from 'react-use';
 import { BrowserRouter as Router } from "react-router-dom";
-import { Switch, Route } from 'react-router';
+import { Switch, Route } from 'react-router-dom';
 import { Home, AppBar, ProfileConfigure, Loading, LoginPage } from './Components';
 import { appStateContext } from './Contexts/'
 import reducer from './Reducers/'
@@ -91,11 +91,11 @@ function App() {
                                             <Container>
                                                 <Suspense fallback={<Loading active={true} />}>
                                                     <Switch >
-                                                        <Route path='/result' component={Result} exact />
-                                                        <Route path='/students' component={Students} exact />
-                                                        <Route path='/teachers' component={Teachers} exact />
-                                                        <Route path='/classes' component={Classes} exact />
-                                                        <Route path='/' component={Home} />
+                                                        <Route path='/result' component={Result} />
+                                                        <Route path='/students' component={Students} />
+                                                        <Route path='/teachers' component={Teachers} />
+                                                        <Route path='/classes' component={Classes} />
+                                                        <Route path='/' component={Home} exact />
                                                     </Switch>
                                                 </Suspense>
                                             </Container>
