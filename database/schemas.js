@@ -1,11 +1,11 @@
 const { mongoose } = require("./mongoose");
 const Schema = mongoose.Schema;
 
-const name = new Schema({
+const name = {
     firstName: String,
     middleName: String,
     lastName: String,
-})
+}
 
 const studentSchema = new Schema({
     name: { 

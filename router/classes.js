@@ -1,12 +1,12 @@
 const Router = require('express').Router();
-const { userModel, classModel } = require('../database/schemas');
+const { classModel } = require('../database/schemas');
 const { NOT_LOGGED_IN, FAILED_TO_SET_INFO, FAILED_TO_GET_INFO, CLASS_EXIST } = require('../Utils/messages');
 
 Router.get("/", async (req, res) => {
     if(!req.user) return  res.status(401).json({msg: NOT_LOGGED_IN});
 
     try{
-        const user = await req.user.populate({ path: 'classes', select: '-_id -belongsTo -students -__v' }).execPopulate();
+        const user = await req.user.populate({ path: 'classes', select: '-_id -belongsTo -__v -students' }).execPopulate();
         res.status(200).json(user.classes);
     }
     catch(err) {
@@ -15,11 +15,21 @@ Router.get("/", async (req, res) => {
     }
 })
 
-Router.get("/class/:id", (req, res) => {
+Router.get("/class/:id", async (req, res) => {
 
     if(!req.user) return res.status(401).send({msg: NOT_LOGGED_IN});
 
-    
+    try{
+        const Class = await classModel.findOne({className: req.params.id, belongsTo: req.user.id}, "-_id -belongsTo -__v")
+        
+        const classWithStudents = await Class.populate({path: 'students', model: 'Student', select: '-_id -belongsTo -__v', populate: { path: 'class', select: '-_id -belongsTo -__v -students' } }).execPopulate();
+
+        res.status(200).json(classWithStudents);
+    }
+    catch(err) {
+        console.error("Error in fetching the classes", err);
+        res.status(503).json({ msg: FAILED_TO_GET_INFO });
+    }
 
 })
 

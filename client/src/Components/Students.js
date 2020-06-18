@@ -13,6 +13,8 @@ import { getClasses, getStudents } from '../Actions';
 import FormatedTable from './Miniatures/FormatedTable';
 import PageContainer from './Miniatures/PageContainer';
 
+const tableFormatting = [{name: "Name", property: "name"}, {name: "Roll No", property: "rollNo"}, {name: "Class", property: 'className'}];
+
 export default function Students() {
 
     const { appState, dispatch } = useContext(appStateContext);
@@ -41,7 +43,7 @@ export default function Students() {
         setConfig({ ...config, addStudentDialogOpen: !config.addStudentDialogOpen });
     }
 
-    const createStudentInfoArray = () => {
+    const createReducedInfoArray = () => {
         let students = [];
         if(!(appState.students instanceof Array)) return null;
         appState.students.forEach(stud => {
@@ -54,7 +56,7 @@ export default function Students() {
         return students;
     }
 
-    const reducedStudentsObject = React.useMemo(createStudentInfoArray, [appState.students]);
+    const reducedStudentsObject = React.useMemo(createReducedInfoArray, [appState.students]);
 
     return (
         <React.Fragment>
@@ -63,7 +65,7 @@ export default function Students() {
                     config.loading ? <LinearProgress /> :
                         <React.Fragment>
                             {
-                                <FormatedTable tableData={reducedStudentsObject} headerData={["Name", "Roll No", "Class"]} />
+                                <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} />
                             }
                             <Dialog open={config.noClassesInProfileDialog} onClose={() => { setConfig({ ...config, noClassesInProfileDialog: false }) }}>
                                 <DialogTitle>We need Some More Data</DialogTitle>

@@ -1,4 +1,4 @@
-import { GET_USER, GET_CLASSES, REQUEST_FAILED, LOGOUT, GET_STUDENTS, SAVE_STUDENT, SET_SCHOOL_NAME, SAVE_CLASS } from '../Actions/types';
+import { GET_USER, GET_CLASSES, REQUEST_FAILED, LOGOUT, GET_STUDENTS, SAVE_STUDENT, SET_SCHOOL_NAME, SAVE_CLASS, GET_CLASS_STUDENTS } from '../Actions/types';
 import combineReducers from 'combine-reducers';
 
 function userReducer(state, action) {
@@ -32,9 +32,23 @@ function classesReducer(state, action) {
 function studentsReducer(state, action) {
     switch(action.type) {
         case GET_STUDENTS:
-            return action.payload
+            return action.payload;
+
         case SAVE_STUDENT:
             return action.payload;
+
+        case GET_CLASS_STUDENTS: 
+            if(!state) return [...action.payload.students];
+
+            let rcvdClassStudents = action.payload.students;
+
+            const unExistedStudents = rcvdClassStudents.filter(student => {                                 // Check if the student already exist on client side
+                for(const stateStudent of state) if(stateStudent.aadharNumber === student.aadharNumber) return false;
+                return true;
+            });
+
+            return [...state, ...unExistedStudents];
+
         default:
             return state;
     }

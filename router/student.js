@@ -64,7 +64,6 @@ Router.route("/")
                     await classInDB.save();
 
                     let populatedUser = await req.user.populate({ path: 'students', populate: { path: 'class', select: '-_id -belongsTo -students -__v' }}).execPopulate();
-                    
                     res.status(201).json(populatedUser.students);
                 }
                 catch(e) {
@@ -73,21 +72,6 @@ Router.route("/")
                     if(!deleted && !deleted2) return console.log("Unlinked Student, 1 Student failed to delete");
                     console.log("Unlinked Student Deleted");
                 }
-
-
-                // userModel.updateOne(
-                //     { _id: req.user.id },
-                //     { $push: { students: student.id } },
-                //     (err, user) => {
-                //         if (err) {
-                //             studentModel.remove({_id: student.id }, (err) => {
-                //                 if(err) return console.error("there was an error in deleting a partially saved record");
-                //                 console.log("sucessfully deleted partially saved record");
-                //             })
-                //         } 
-                //         else return res.status(201).json();
-                //     }
-                // );
             })
                 
 

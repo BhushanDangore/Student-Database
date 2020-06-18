@@ -10,9 +10,9 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-function FormatedTable({ tableData, size = "medium", headerData, linkPathIdentifire }) {
+function FormatedTable({ tableData, size = "medium", formatting, linkPathIdentifire }) {
 
-    if (!(tableData instanceof Array) || !(headerData instanceof Array)) throw new Error("tableData And headerData Are Required Fields of type Array")
+    if (!(tableData instanceof Array) || !(formatting instanceof Array)) throw new Error("tableData And formatting Are Required Fields of type Array")
 
     const LinkStyles = {
         color: "inherit",
@@ -21,24 +21,16 @@ function FormatedTable({ tableData, size = "medium", headerData, linkPathIdentif
         verticalAlign: "middle"
     }
 
-    const createRowOfObject = () => {
-
-        return (
-            headerData.map((colName, indx) => (
-                <TableCell component='div' key={indx} > {colName.trim()} </TableCell>
-            ))
-        )
-
-    }
-
     let { url } = useRouteMatch();
-    
+
     return (
         <TableContainer>
             <Table size={size} component='div' stickyHeader >
                 <TableHead component='div'>
                     <StyledTableRow component='div'>
-                        {createRowOfObject(tableData[0])}
+                        {formatting.map( (column, indx) => {
+                            return <TableCell component='div' key={indx} > {column.name} </TableCell>
+                        })}
                     </StyledTableRow>
                 </TableHead>
                 <TableBody component='div' >
@@ -51,11 +43,11 @@ function FormatedTable({ tableData, size = "medium", headerData, linkPathIdentif
                                         to={`${url}/${obj[linkPathIdentifire]}`}
                                         style={LinkStyles}
                                     >
-                                        {   Object.values(obj).map((val, indx) => (<TableCell key={indx} component='div' >{val}</TableCell>))   }
+                                        { formatting.map((fObj,indx) => <TableCell key={indx} component='div' > { obj[fObj.property] } </TableCell>) }
                                     </Link>
                                     :
                                     <StyledTableRow key={indx} component='div' >
-                                        {   Object.values(obj).map((val, indx) => (<TableCell key={indx} component='div' >{val}</TableCell>))   }
+                                        { formatting.map((fObj,indx) => <TableCell key={indx} component='div' > { obj[fObj.property] } </TableCell>) }
                                     </StyledTableRow>
                                 )}
                             

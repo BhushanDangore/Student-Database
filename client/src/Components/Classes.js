@@ -41,7 +41,7 @@ export default function Classes() {
                 <Route exact path={path}>
                     <PageContainer onFabClick={toggleFAB} addClassDialogOpen={config.addClassDialogOpen} pageTitle="Classes Section" >
                     {
-                        appState.classes ? <FormatedTable tableData={appState.classes} headerData={["Class Name", "Class Number"]} linkPathIdentifire="className" prefixPath="classes" loading={config.loading} />
+                        appState.classes ? <FormatedTable tableData={appState.classes} formatting={[{ name: 'Class Name', property: 'className' }, { name: 'Class Number', property: 'classNumber' }] } linkPathIdentifire="className" prefixPath="classes" loading={config.loading} />
                         : config.loading ? <LinearProgress /> : null
                     }
                     </PageContainer>
