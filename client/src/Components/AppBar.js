@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     margin: {
-        margin: "0 12px"
+        marginRight: "12px"
     }
 }));
 
@@ -56,9 +56,7 @@ export default function AppBar({ handleDrawerToggle, setDarkMode, darkMode }) {
                     {
                         appState.user.loggedIn === null ? null : appState.user.loggedIn ?
                             <React.Fragment>
-                                <a href="/api/logout" style={{ marginRight: "10px" }} onClick={() => { logout() }}>
-                                    <Button color="inherit" variant="outlined" size='small' >Logout</Button>
-                                </a>
+                                <Button color="inherit" variant="outlined" size='small' href="/api/logout" onClick={logout} className={classes.margin} > Logout </Button>
                                 <Avatar alt={user.userName} src={user.profilePic} />
                             </React.Fragment>
                             :

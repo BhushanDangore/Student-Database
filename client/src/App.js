@@ -58,8 +58,14 @@ function App() {
             loggedIn: null,
             loading: true,
         },
-        classes: null,
-        students: null,
+        classes: {
+            array: null,
+            loading: true,
+        },
+        students: {
+            array: null,
+            loading: true,
+        },
     }
     const [state, dispatch] = useReducer(reducer, initialState)
 

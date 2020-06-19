@@ -23,13 +23,11 @@ export default function Classes() {
     })
 
     useEffect(() => {
-        if(appState.classes === null) return getClasses(dispatch);
-
-        if(config.loading) return setConfig({...config, loading: false});
+        if(appState.classes.array === null) return getClasses(dispatch);
 
         if(config.addClassDialogOpen) return setConfig({...config, addClassDialogOpen: false});
         // eslint-disable-next-line
-    }, [appState.classes])
+    }, [appState.classes.array])
 
     const toggleFAB = () => {
         setConfig({ addClassDialogOpen: !config.addClassDialogOpen })
@@ -41,8 +39,8 @@ export default function Classes() {
                 <Route exact path={path}>
                     <PageContainer onFabClick={toggleFAB} addClassDialogOpen={config.addClassDialogOpen} pageTitle="Classes Section" >
                     {
-                        appState.classes ? <FormatedTable tableData={appState.classes} formatting={[{ name: 'Class Name', property: 'className' }, { name: 'Class Number', property: 'classNumber' }] } linkPathIdentifire="className" prefixPath="classes" loading={config.loading} />
-                        : config.loading ? <LinearProgress /> : null
+                        appState.classes.array ? <FormatedTable tableData={appState.classes.array} formatting={[{ name: 'Class Name', property: 'className' }, { name: 'Class Number', property: 'classNumber' }] } linkPathIdentifire="className" prefixPath="classes" loading={config.loading} />
+                        : appState.classes.loading ? <LinearProgress /> : null
                     }
                     </PageContainer>
                     <AddClassForm open={config.addClassDialogOpen} closeForm={toggleFAB} />

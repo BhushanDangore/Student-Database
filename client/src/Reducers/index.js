@@ -1,4 +1,4 @@
-import { GET_USER, GET_CLASSES, REQUEST_FAILED, LOGOUT, GET_STUDENTS, SAVE_STUDENT, SET_SCHOOL_NAME, SAVE_CLASS, GET_CLASS_STUDENTS } from '../Actions/types';
+import { GET_USER, GET_CLASSES, REQUEST_FAILED, LOGOUT, GET_STUDENTS, SAVE_STUDENT, SET_SCHOOL_NAME, SAVE_CLASS, GET_CLASS_STUDENTS, SET_STUDENTS_LOADING } from '../Actions/types';
 import combineReducers from 'combine-reducers';
 
 function userReducer(state, action) {
@@ -19,10 +19,10 @@ function userReducer(state, action) {
 function classesReducer(state, action) {
     switch(action.type) {
         case GET_CLASSES:
-            return action.payload;
+            return { loading: false, array: action.payload };
 
         case SAVE_CLASS:
-            return action.payload;
+            return { loading: false, array: action.payload };
         
         default:
             return state;
@@ -32,23 +32,27 @@ function classesReducer(state, action) {
 function studentsReducer(state, action) {
     switch(action.type) {
         case GET_STUDENTS:
-            return action.payload;
+            return { loading: false, array: action.payload };
 
         case SAVE_STUDENT:
-            return action.payload;
+            return { loading: false, array: action.payload };
 
         case GET_CLASS_STUDENTS: 
-            if(!state) return [...action.payload.students];
+            
+            if(!state.array) return { array: action.payload.students, loading: false };
 
             let rcvdClassStudents = action.payload.students;
 
             const unExistedStudents = rcvdClassStudents.filter(student => {                                 // Check if the student already exist on client side
-                for(const stateStudent of state) if(stateStudent.aadharNumber === student.aadharNumber) return false;
+                for(const stateStudent of state.array) if(stateStudent.aadharNumber === student.aadharNumber) return false;
                 return true;
             });
 
-            return [...state, ...unExistedStudents];
+            return {array: [...state.array, ...unExistedStudents], loading: false };
 
+        case SET_STUDENTS_LOADING:
+            return { ...state, loading: true }
+        
         default:
             return state;
     }

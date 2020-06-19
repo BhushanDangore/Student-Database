@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import PageContainer from './Miniatures/PageContainer'
 import { useParams } from 'react-router'
 import FormatedTable from './Miniatures/FormatedTable';
@@ -15,12 +15,13 @@ export default function ClassPage() {
 
     useEffect(() => {
         getClass(class_name, dispatch)
+        // eslint-disable-next-line
     },[])
 
     const createReducedInfoArray = () => {
         let students = [];
-        if(!(appState.students instanceof Array)) return [];
-        appState.students.forEach(stud => {
+        if(appState.students.loading) return null;
+        appState.students.array.forEach(stud => {
             if(stud.class.className === class_name)
             students.push((({
                 name: { firstName, lastName },
@@ -32,14 +33,14 @@ export default function ClassPage() {
         return students;
     }
 
-    const reducedStudentsObject = React.useMemo(createReducedInfoArray, [appState.students, class_name]);
+    const reducedStudentsObject = React.useMemo(createReducedInfoArray, [appState.students.array, class_name]);
 
     console.log(reducedStudentsObject)
 
     return (
-        <PageContainer noFab={true} pageTitle={`Class ${class_name}`} >
+        <PageContainer noFab={true} pageTitle={`Class`} >
             <Typography variant="h6" gutterBottom >Students </Typography>
-            { !appState.students ? <LinearProgress /> :
+            { !appState.students.array ? <LinearProgress /> :
                 <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} />
             }
         </PageContainer>

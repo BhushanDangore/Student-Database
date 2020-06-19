@@ -226,7 +226,7 @@ export default function AddStudentForm({ open, toggleFAB }) {
                         value={ student.class }
                         onChange={(e)=>{ setStudent({...student, class: e.target.value}) }}>
                         {
-                            appState.classes.map((elm, index) => (<MenuItem value={elm.className} key={index}>{elm.className}</MenuItem>))
+                            appState.classes.array.map((elm, index) => (<MenuItem value={elm.className} key={index}>{elm.className}</MenuItem>))
                         }
                     </Select>
                 </div>

@@ -12,7 +12,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 function FormatedTable({ tableData, size = "medium", formatting, linkPathIdentifire }) {
 
-    if (!(tableData instanceof Array) || !(formatting instanceof Array)) throw new Error("tableData And formatting Are Required Fields of type Array")
+    if (!(formatting instanceof Array || tableData instanceof Array)) throw new Error("formatting and tableData are Required Props of type Array")
 
     const LinkStyles = {
         color: "inherit",
