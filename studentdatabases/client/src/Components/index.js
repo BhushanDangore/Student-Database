@@ -1,0 +1,9 @@
+export {default as Home } from './Home';
+export {default as Result } from './Result';
+export {default as Classes } from './Classes';
+export {default as Teachers } from './Teachers';
+export {default as Students } from './Students';
+export {default as AppBar } from './AppBar';
+export {default as Loading } from './Miniatures/Loading';
+export {default as LoginPage } from './LoginPage';
+export {default as ProfileConfigure } from './Miniatures/ProfileConfigure';
