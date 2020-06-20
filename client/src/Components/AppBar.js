@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { AppBar as AppBarDefault, Typography, Toolbar, IconButton, Button, makeStyles, Avatar } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { appStateContext } from '../Contexts/';
 import { Link } from 'react-router-dom';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import { logout } from './../Actions/index';
+import { getUser } from '../Actions';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -28,15 +29,23 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function AppBar({ handleDrawerToggle, setDarkMode, darkMode }) {
+
+
+function AppBar({ handleDrawerToggle, setDarkMode, darkMode, dispatch }) {
     const { appState } = useContext(appStateContext);
     const user = appState.user;
     const classes = useStyles();
+    useEffect(() => {
+        getUser(dispatch);
+        // eslint-disable-next-line
+    }, [])
+
+    console.log("App Bar rendered")
     return (
         <React.Fragment>
             <AppBarDefault
                 position="static"
-                style={{ width: appState.user.loggedIn ? null : "100%" }}
+                style={appState.user.loggedIn ? null : { width: "100%" }}
                 className={classes.appBar}>
                 <Toolbar>
                     {
@@ -69,3 +78,7 @@ export default function AppBar({ handleDrawerToggle, setDarkMode, darkMode }) {
         </React.Fragment>
     )
 }
+
+export default React.memo(AppBar, (prvS, nextS) => {
+    return prvS.darkMode === nextS.darkMode
+});

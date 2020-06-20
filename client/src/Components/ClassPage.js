@@ -12,15 +12,19 @@ export default function ClassPage() {
     let { class_name } = useParams();
 
     const {appState, dispatch} = useContext(appStateContext);
+    let reducedStudentsObject;
 
     useEffect(() => {
         getClass(class_name, dispatch)
+
         // eslint-disable-next-line
     },[])
 
+    
     const createReducedInfoArray = () => {
         let students = [];
         if(appState.students.loading) return null;
+        console.log("expensive calculation")
         appState.students.array.forEach(stud => {
             if(stud.class.className === class_name)
             students.push((({
@@ -30,13 +34,12 @@ export default function ClassPage() {
                 class : {className}
             }) => ({name: `${firstName} ${lastName}`, rollNo, studentMobileNo, className }))(stud))
         });
+        console.log("Calculated");
         return students;
     }
 
-    const reducedStudentsObject = React.useMemo(createReducedInfoArray, [appState.students.array, class_name]);
-
-    console.log(reducedStudentsObject)
-
+    reducedStudentsObject = React.useMemo(createReducedInfoArray, [appState.students.array]);
+    
     return (
         <PageContainer noFab={true} pageTitle={`Class`} >
             <Typography variant="h6" gutterBottom >Students </Typography>

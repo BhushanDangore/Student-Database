@@ -26,8 +26,8 @@ export default function Students() {
     })
 
     useEffect(() => {
-        if (appState.classes.array === null) getClasses(dispatch);
         if (appState.students.array === null) getStudents(dispatch);
+        if(appState.classes.array === null) getClasses(dispatch);
     // eslint-disable-next-line
     }, [])
 
@@ -86,6 +86,7 @@ export default function Students() {
                         </React.Fragment>
                 }
             </PageContainer>
+
         </React.Fragment>
     )
 }

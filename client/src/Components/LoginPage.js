@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     
 })
 
-export default function LoginPage() {
+function LoginPage() {
     const classes = useStyles();
     const [state, setState] = React.useState({
         email: '',
@@ -54,3 +54,5 @@ export default function LoginPage() {
         </div>
     )
 }
+
+export default React.memo(LoginPage);

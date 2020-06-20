@@ -1,5 +1,5 @@
 import { GET_USER, GET_CLASSES, REQUEST_FAILED, LOGOUT, GET_STUDENTS, SAVE_STUDENT, SET_SCHOOL_NAME, SAVE_CLASS, GET_CLASS_STUDENTS, SET_STUDENTS_LOADING } from '../Actions/types';
-import combineReducers from 'combine-reducers';
+import combineReducers from './combineReducer';
 
 function userReducer(state, action) {
     console.log("Reducer Called ACTION: "+ action.type)
@@ -32,7 +32,7 @@ function classesReducer(state, action) {
 function studentsReducer(state, action) {
     switch(action.type) {
         case GET_STUDENTS:
-            return { loading: false, array: action.payload };
+            return { loading: false, array: action.payload }
 
         case SAVE_STUDENT:
             return { loading: false, array: action.payload };
@@ -47,6 +47,10 @@ function studentsReducer(state, action) {
                 for(const stateStudent of state.array) if(stateStudent.aadharNumber === student.aadharNumber) return false;
                 return true;
             });
+
+            if(!unExistedStudents.length) {
+                return { array: state.array, loading: false }
+            };
 
             return {array: [...state.array, ...unExistedStudents], loading: false };
 

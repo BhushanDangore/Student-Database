@@ -5,10 +5,11 @@ import PersonIcon from '@material-ui/icons/Person';
 import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import ClassIcon from '@material-ui/icons/Class';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
+const container = window.document.body;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,23 +32,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function ResponsiveDrawer(props) {
-    const { window, mobileOpen, handleDrawerToggle } = props;
+
+function ResponsiveDrawer({ mobileOpen, handleDrawerToggle }) {
     const classes = useStyles();
-    const theme = useTheme();
+
+    const closeDrawer  = () => handleDrawerToggle(true)
 
     const drawer = (
         <div>
             <div className={classes.toolbar} />
             <Divider />
             <List>
-                <Link to='/' onClick={()=>{handleDrawerToggle(true)}}>
+                <Link to='/' onClick={closeDrawer}>
                     <ListItem button>
                         <ListItemIcon><HomeIcon /></ListItemIcon>
                         <ListItemText primary={"Home"} />
                     </ListItem>
                 </Link>
-                <Link to='/result' onClick={()=>{handleDrawerToggle(true)}}> 
+                <Link to='/result' onClick={closeDrawer}> 
                     <ListItem button>
                         <ListItemIcon><AssignmentTurnedInIcon /></ListItemIcon>
                         <ListItemText primary={"Result"} />
@@ -56,20 +58,20 @@ function ResponsiveDrawer(props) {
             </List>
             <Divider />
             <List>
-                <Link to='/students' onClick={()=>{handleDrawerToggle(true)}}>
+                <Link to='/students' onClick={closeDrawer}>
                     <ListItem button>
                         <ListItemIcon><LocalLibraryIcon /></ListItemIcon>
                         <ListItemText primary={"Students"} />
                     </ListItem>
                 </Link>
-                <Link to='/teachers' onClick={()=>{handleDrawerToggle(true)}}>
+                <Link to='/teachers' onClick={closeDrawer}>
                     <ListItem button>
                         <ListItemIcon><PersonIcon /></ListItemIcon>
                         <ListItemText primary={"Teacher"} />
                     </ListItem>
 
                 </Link>
-                <Link to='/classes' onClick={()=>{handleDrawerToggle(true)}}>
+                <Link to='/classes' onClick={closeDrawer}>
                     <ListItem button>
                         <ListItemIcon><ClassIcon /></ListItemIcon>
                         <ListItemText primary={"Classes"} />
@@ -79,8 +81,6 @@ function ResponsiveDrawer(props) {
         </div>
     );
 
-    const container = window !== undefined ? () => window().document.body : undefined;
-
     return (
         <div className={classes.root}>
             <nav className={classes.drawer} aria-label="mailbox folders">
@@ -89,7 +89,6 @@ function ResponsiveDrawer(props) {
                     <Drawer
                         container={container}
                         variant="temporary"
-                        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
                         open={mobileOpen}
                         onClose={handleDrawerToggle}
                         classes={{
@@ -118,4 +117,6 @@ function ResponsiveDrawer(props) {
     );
 }
 
-export default ResponsiveDrawer;
+export default React.memo(ResponsiveDrawer, (prevProp, nextProp) => {
+    return prevProp.mobileOpen === nextProp.mobileOpen;
+})

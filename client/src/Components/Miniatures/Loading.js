@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 export default function Loading({ active }) {
 
     const classes = useStyles();
-
+    console.log("loading")
     return (
         <Transition in={active} timeout={200} unmountOnExit>
             {state => (
