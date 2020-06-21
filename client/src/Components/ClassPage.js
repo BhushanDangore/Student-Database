@@ -5,6 +5,7 @@ import FormatedTable from './Miniatures/FormatedTable';
 import { Typography, LinearProgress } from '@material-ui/core';
 import { getClass } from '../Actions';
 import { appStateContext } from './../Contexts/index';
+import { SET_CLASSES_LOADING } from './../Actions/types';
 
 const tableFormatting = [{name: "Student Name", property: 'name'}, {name: "Roll Number", property: 'rollNo'}, {name: "Mobile Number", property: 'studentMobileNo'}]
 
@@ -16,15 +17,13 @@ export default function ClassPage() {
 
     useEffect(() => {
         getClass(class_name, dispatch)
-
+        dispatch({type: SET_CLASSES_LOADING});
         // eslint-disable-next-line
     },[])
-
     
     const createReducedInfoArray = () => {
         let students = [];
-        if(appState.students.loading) return null;
-        console.log("expensive calculation")
+        if(appState.loadings.students) return [];
         appState.students.array.forEach(stud => {
             if(stud.class.className === class_name)
             students.push((({
@@ -43,9 +42,7 @@ export default function ClassPage() {
     return (
         <PageContainer noFab={true} pageTitle={`Class`} >
             <Typography variant="h6" gutterBottom >Students </Typography>
-            { !appState.students.array ? <LinearProgress /> :
-                <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} />
-            }
+            { appState.loadings.students ? <LinearProgress /> : <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} /> }
         </PageContainer>
     )
 }

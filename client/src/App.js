@@ -1,15 +1,15 @@
-import React, { useState, Suspense, lazy, useReducer } from 'react';
+import React, { useState, useEffect, Suspense, lazy, useReducer, useCallback } from 'react';
 
 import './App.css';
 
 import ResponsiveDrawer from './Components/ResponsiveDrawer';
-import { CssBaseline, Container, makeStyles, createMuiTheme, ThemeProvider, LinearProgress } from '@material-ui/core';
-import { useLocalStorage } from 'react-use';
+import { CssBaseline, Container, makeStyles, LinearProgress } from '@material-ui/core';
 import { BrowserRouter as Router } from "react-router-dom";
 import { Switch, Route } from 'react-router-dom';
 import { Home, AppBar, ProfileConfigure, Loading, LoginPage } from './Components';
 import { appStateContext } from './Contexts/'
 import reducer from './Reducers/'
+import { getUser } from './Actions';
 
 const Students = lazy(() => import('./Components/Students'));
 const Result = lazy(() => import('./Components/Result'));
@@ -46,44 +46,39 @@ const initialState = {
         array: null,
         loading: true,
     },
+    loadings: {
+        user: true,
+        classes: true,
+        students: true,
+    }
 }
 
 
-function App() {
+function App({darkMode, setDarkMode}) {
 
-    const [darkMode, setDarkMode] = useLocalStorage("darkMode", localStorage.getItem("darkMode") === true ? true : false);
-    const theme = createMuiTheme({
-        palette: {
-            primary: {
-                main: '#576767',
-            },
-            secondary: {
-                main: '#e45e2a',
-            },
-            type: darkMode ? 'dark' : 'light',
-        }
-    })
     const classes = useStyles();
     
     const [state, dispatch] = useReducer(reducer, initialState)
     const [mobileOpen, setMobileOpen] = useState(false);    //Drawer Open State for Mobile UI
 
-    const handleDrawerToggle = (closeOnly) => {
-        if (closeOnly === true) return setMobileOpen(false);
-        else return setMobileOpen(!mobileOpen);
-    }
+    useEffect(() => {
+        getUser(dispatch);
+        // eslint-disable-next-line
+    }, [])
+    
+    // eslint-disable-next-line
+    const handleDrawerToggle = useCallback((closeOnly) => setMobileOpen(closeOnly === true ? false : !mobileOpen), []);
 
-    console.info("App State Data: ", state);
-
+    console.info("App State: ", state);
+    
     return (
         <div className="App">
             <appStateContext.Provider value={{ appState: state, dispatch }}>
-                <ThemeProvider theme={theme} >
                     <Router>
                         <div className={classes.wrapper}>
                             <CssBaseline />
-                            <AppBar handleDrawerToggle={ handleDrawerToggle } setDarkMode={setDarkMode} darkMode={darkMode} dispatch={dispatch} />
-                            { state.user.loggedIn === null ? <Loading active={state.user.loading} /> :
+                            <AppBar handleDrawerToggle={ handleDrawerToggle } setDarkMode={setDarkMode} darkMode={darkMode} user={ state.user } />
+                            { state.loadings.user === true ? <Loading active={state.loadings.user} /> :
                                 state.user.loggedIn ?
                                     <React.Fragment>
                                         <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
@@ -109,7 +104,6 @@ function App() {
                             }
                         </div>
                     </Router>
-                </ThemeProvider>
             </appStateContext.Provider>
         </div>
     );

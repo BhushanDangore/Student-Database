@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import { Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
@@ -35,8 +35,9 @@ const useStyles = makeStyles((theme) => ({
 
 function ResponsiveDrawer({ mobileOpen, handleDrawerToggle }) {
     const classes = useStyles();
-
-    const closeDrawer  = () => handleDrawerToggle(true)
+    
+    // eslint-disable-next-line
+    const closeDrawer  = useCallback(() => handleDrawerToggle(true),[]);
 
     const drawer = (
         <div>
@@ -90,7 +91,7 @@ function ResponsiveDrawer({ mobileOpen, handleDrawerToggle }) {
                         container={container}
                         variant="temporary"
                         open={mobileOpen}
-                        onClose={handleDrawerToggle}
+                        onClose={closeDrawer}
                         classes={{
                             paper: classes.drawerPaper,
                         }}

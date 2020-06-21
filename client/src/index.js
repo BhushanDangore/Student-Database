@@ -1,10 +1,39 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import ReactDOM from 'react-dom';
+
+import { useLocalStorage } from 'react-use';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core';
+
 import App from './App';
+
 import * as serviceWorker from './serviceWorker';
 
+function AppWithTheme() {
+    const [darkMode, _setDarkMode] = useLocalStorage("darkMode", localStorage.getItem("darkMode") === true ? true : false);
+    const setDarkMode = useCallback(_setDarkMode, []);
+    const theme = useMemo(() => {
+        return createMuiTheme({
+            palette: {
+                primary: {
+                    main: '#576767',
+                },
+                secondary: {
+                    main: '#e45e2a',
+                },
+                type: darkMode ? 'dark' : 'light',
+            }
+        })
+    }, [darkMode])
+
+    return (
+        <ThemeProvider theme={theme} >
+            <App darkMode={darkMode} setDarkMode={setDarkMode} />
+        </ThemeProvider>
+    )
+}
+
 ReactDOM.render(
-    <App />,
+    <AppWithTheme />,
     document.getElementById('root')
 );
 

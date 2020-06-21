@@ -1,15 +1,17 @@
-import { GET_USER, GET_CLASSES, REQUEST_FAILED, LOGOUT, GET_STUDENTS, SAVE_STUDENT, SET_SCHOOL_NAME, SAVE_CLASS, GET_CLASS_STUDENTS, SET_STUDENTS_LOADING } from '../Actions/types';
+import { GET_USER, GET_CLASSES, REQUEST_FAILED, LOGOUT, GET_STUDENTS, SAVE_STUDENT, SET_SCHOOL_NAME, SAVE_CLASS, GET_CLASS_STUDENTS, SET_STUDENTS_LOADING, SET_CLASSES_LOADING } from '../Actions/types';
 import combineReducers from './combineReducer';
 
 function userReducer(state, action) {
     console.log("Reducer Called ACTION: "+ action.type)
     switch (action.type) {
+        
         case GET_USER:
-            if(action.payload.userName) return { ...action.payload, loading: false, loggedIn: true }
-            else return { loggedIn: false, loading: false }
+            if(action.payload.userName) return { ...action.payload, loggedIn: true }
+            else return { loggedIn: false }
 
         case SET_SCHOOL_NAME: 
             return {...state, schoolName: action.payload.schoolName, isProfileComplet: true }
+
         default:
             return state;
     }
@@ -19,10 +21,10 @@ function userReducer(state, action) {
 function classesReducer(state, action) {
     switch(action.type) {
         case GET_CLASSES:
-            return { loading: false, array: action.payload };
+            return { array: action.payload };
 
         case SAVE_CLASS:
-            return { loading: false, array: action.payload };
+            return { array: action.payload };
         
         default:
             return state;
@@ -32,30 +34,26 @@ function classesReducer(state, action) {
 function studentsReducer(state, action) {
     switch(action.type) {
         case GET_STUDENTS:
-            return { loading: false, array: action.payload }
+            return { array: action.payload }
 
         case SAVE_STUDENT:
-            return { loading: false, array: action.payload };
+            return { array: action.payload };
 
         case GET_CLASS_STUDENTS: 
-            
-            if(!state.array) return { array: action.payload.students, loading: false };
+            if(!state.array) return { array: action.payload.students };
 
             let rcvdClassStudents = action.payload.students;
-
-            const unExistedStudents = rcvdClassStudents.filter(student => {                                 // Check if the student already exist on client side
-                for(const stateStudent of state.array) if(stateStudent.aadharNumber === student.aadharNumber) return false;
+            const unExistedStudents = rcvdClassStudents.filter(student => {                     // Check if the student already exist on client side
+                for(const stateStudent of state.array) if(stateStudent.aadharNumber === student.aadharNumber) return false; 
                 return true;
             });
 
             if(!unExistedStudents.length) {
-                return { array: state.array, loading: false }
+                console.error("No new students are fetched");
+                return { array: state.array }
             };
-
-            return {array: [...state.array, ...unExistedStudents], loading: false };
-
-        case SET_STUDENTS_LOADING:
-            return { ...state, loading: true }
+            console.log("new students are fetched");
+            return {array: [...state.array, ...unExistedStudents] };
         
         default:
             return state;
@@ -65,6 +63,22 @@ function studentsReducer(state, action) {
 function teachersReducer(state, action) {
     switch(action.type) {
         
+        default:
+            return state;
+    }
+}
+
+function loadings(state, action) {
+    switch(action.type) {
+        
+        case SET_STUDENTS_LOADING: return { ...state, students: false }
+
+        case  GET_CLASS_STUDENTS: return { ...state, students: false }
+
+        case GET_USER: return { ...state, user: false }
+        
+        case SET_CLASSES_LOADING: return { ...state, classes: false }
+
         default:
             return state;
     }
@@ -89,5 +103,6 @@ export default combineReducers({
     classes: classesReducer,
     students: studentsReducer,
     teachers: teachersReducer,
+    loadings: loadings,
     extras: extrasReducer
 })
