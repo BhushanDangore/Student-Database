@@ -7,7 +7,6 @@ Router.route("/")
         if (!req.user) res.status(401).send({msg: NOT_LOGGED_IN});
         
         try{
-            console.log("HIT");
             const user = await req.user.populate({ 
                 path: 'students', select: '-_id -belongsTo -__v',
                 populate: { path: 'class', select: '-_id -belongsTo -classNumber -students -__v' },
