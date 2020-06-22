@@ -11,18 +11,23 @@ import {
     useRouteMatch,
 } from 'react-router-dom';
 import ClassPage from './ClassPage';
+import useFetchDataWithLoading from './../Utils/useLoading';
+
+const formatting = [{ name: 'Class Name', property: 'className' }, { name: 'Class Number', property: 'classNumber' }];
 
 export default function Classes() {
     
     let { path } = useRouteMatch();
 
-    const { appState, dispatch } = React.useContext(appStateContext);
+    const { appState } = React.useContext(appStateContext);
     const [config, setConfig] = React.useState({
         addClassDialogOpen: false,
     })
 
+    const [loading, fetchData] = useFetchDataWithLoading(getClasses);
+
     useEffect(() => {
-        if(appState.classes.array === null) return getClasses(dispatch);
+        if(appState.classes.array === null) return fetchData();
         if(config.addClassDialogOpen) return setConfig({...config, addClassDialogOpen: false});
         // eslint-disable-next-line
     }, [appState.classes.array])
@@ -37,8 +42,14 @@ export default function Classes() {
                 <Route exact path={path}>
                     <PageContainer onFabClick={toggleFAB} addClassDialogOpen={config.addClassDialogOpen} pageTitle="Classes Section" >
                     {
-                        appState.classes.array ? <FormatedTable tableData={appState.classes.array} formatting={[{ name: 'Class Name', property: 'className' }, { name: 'Class Number', property: 'classNumber' }] } linkPathIdentifire="className" prefixPath="classes" />
-                        : appState.loadings.classes ? <LinearProgress /> : null
+                        appState.classes.array ? 
+                            <FormatedTable 
+                                tableData={appState.classes.array} 
+                                formatting={ formatting } 
+                                linkPathIdentifire="className" 
+                                prefixPath="classes" 
+                            />
+                        : loading ? <LinearProgress /> : null
                     }
                     </PageContainer>
                     <AddClassForm open={config.addClassDialogOpen} closeForm={toggleFAB} />

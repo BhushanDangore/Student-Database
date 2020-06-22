@@ -1,4 +1,14 @@
-import { GET_USER, GET_CLASSES, REQUEST_FAILED, LOGOUT, GET_STUDENTS, SAVE_STUDENT, SET_SCHOOL_NAME, SAVE_CLASS, GET_CLASS_STUDENTS, SET_STUDENTS_LOADING, SET_CLASSES_LOADING } from '../Actions/types';
+import { 
+    GET_USER, 
+    GET_CLASSES, 
+    REQUEST_FAILED, 
+    LOGOUT, 
+    GET_STUDENTS, 
+    SAVE_STUDENT, 
+    SET_SCHOOL_NAME, 
+    SAVE_CLASS, 
+    GET_CLASS_STUDENTS,
+} from '../Actions/types';
 import combineReducers from './combineReducer';
 
 function userReducer(state, action) {
@@ -68,22 +78,6 @@ function teachersReducer(state, action) {
     }
 }
 
-function loadings(state, action) {
-    switch(action.type) {
-        
-        case SET_STUDENTS_LOADING: return { ...state, students: false }
-
-        case  GET_CLASS_STUDENTS: return { ...state, students: false }
-
-        case GET_USER: return { ...state, user: false }
-        
-        case SET_CLASSES_LOADING: return { ...state, classes: false }
-
-        default:
-            return state;
-    }
-}
-
 function extrasReducer(state, action) {
     switch(action.type) {
         case REQUEST_FAILED:
@@ -103,6 +97,5 @@ export default combineReducers({
     classes: classesReducer,
     students: studentsReducer,
     teachers: teachersReducer,
-    loadings: loadings,
     extras: extrasReducer
 })

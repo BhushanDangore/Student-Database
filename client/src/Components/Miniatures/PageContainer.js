@@ -29,7 +29,7 @@ function PageContainer(props) {
                 }
                 {
                     noFab ? null : 
-                    <Fab color="primary" aria-label="add" size="medium" className={classes.fab} onClick={onFabClick}>
+                    <Fab color="secondary" aria-label="add" size="medium" className={classes.fab} onClick={onFabClick}>
                         <AddIcon />
                     </Fab>
                 }

@@ -10,6 +10,7 @@ import { Home, AppBar, ProfileConfigure, Loading, LoginPage } from './Components
 import { appStateContext } from './Contexts/'
 import reducer from './Reducers/'
 import { getUser } from './Actions';
+import useFetchDataWithLoading from './Utils/useLoading';
 
 const Students = lazy(() => import('./Components/Students'));
 const Result = lazy(() => import('./Components/Result'));
@@ -18,7 +19,7 @@ const Teachers = lazy(() => import('./Components/Teachers'));
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => {
-    return { 
+    return {
         drawerMargin: {
             [theme.breakpoints.up('sm')]: {
                 paddingLeft: drawerWidth + 10,
@@ -53,16 +54,16 @@ const initialState = {
     }
 }
 
-
-function App({darkMode, setDarkMode}) {
+function App({ darkMode, setDarkMode }) {
 
     const classes = useStyles();
-    
+
     const [state, dispatch] = useReducer(reducer, initialState)
     const [mobileOpen, setMobileOpen] = useState(false);    //Drawer Open State for Mobile UI
+    const [loadingUser, fetchUser] = useFetchDataWithLoading(getUser, true, dispatch);
 
     useEffect(() => {
-        getUser(dispatch);
+        fetchUser();
         // eslint-disable-next-line
     }, [])
     
@@ -70,17 +71,17 @@ function App({darkMode, setDarkMode}) {
     const handleDrawerToggle = useCallback((closeOnly) => setMobileOpen(closeOnly === true ? false : !mobileOpen), []);
 
     console.info("App State: ", state);
-    
+
     return (
         <div className="App">
-            <appStateContext.Provider value={{ appState: state, dispatch }}>
-                    <Router>
-                        <div className={classes.wrapper}>
-                            <CssBaseline />
-                            <AppBar handleDrawerToggle={ handleDrawerToggle } setDarkMode={setDarkMode} darkMode={darkMode} user={ state.user } />
-                            { state.loadings.user === true ? <Loading active={state.loadings.user} /> :
-                                state.user.loggedIn ?
-                                    <React.Fragment>
+            <Router>
+                <div className={classes.wrapper}>
+                        <CssBaseline />
+                        <AppBar handleDrawerToggle={handleDrawerToggle} setDarkMode={setDarkMode} darkMode={darkMode} user={ state.user } />
+                        {loadingUser ? <Loading active={true} /> :
+                            state.user.loggedIn ?
+                                <React.Fragment>
+                                    <appStateContext.Provider value={{ appState: state, dispatch }}>
                                         <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
                                         <div className={classes.mainContent}>
                                             <Container>
@@ -96,15 +97,15 @@ function App({darkMode, setDarkMode}) {
                                             </Container>
                                         </div>
                                         <ProfileConfigure />
-                                    </React.Fragment>
-                                    :
-                                    <div className={classes.mainContent}>
-                                        <Route path='/login' exact><LoginPage /></Route>
-                                    </div>
-                            }
-                        </div>
-                    </Router>
-            </appStateContext.Provider>
+                                    </appStateContext.Provider>
+                                </React.Fragment>
+                                :
+                                <div className={classes.mainContent}>
+                                    <Route path='/login' exact><LoginPage /></Route>
+                                </div>
+                        }
+                </div>
+            </Router>
         </div>
     );
 }

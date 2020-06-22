@@ -104,7 +104,7 @@ export default function AddStudentForm({ open, toggleFAB }) {
                 <div className={`${classes.dialogContainer} ${classes.form}`}>
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <Typography variant='h6' >Add Student</Typography>
-                        <Button variant='contained' onClick={clearForm} color='secondary'>Clear</Button>
+                        <Button variant='outlined' onClick={clearForm} color="primary" >Clear</Button>
                     </div>
                     <Divider />
                     <div className={classes.multifields}>

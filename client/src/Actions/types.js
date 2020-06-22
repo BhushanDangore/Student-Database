@@ -11,8 +11,10 @@ export const SAVE_STUDENT = "SAVE_STUDENT";
 
 export const GET_TEACHERS = "GET_TEACHERS";
 
+export const SET_LOADING = "SET_LOADING";
 export const SET_STUDENTS_LOADING = "SET_STUDENTS_LOADING";
 export const SET_CLASSES_LOADING = "SET_CLASSES_LOADING";
+export const SET_USER_LOADING = "SET_USER_LOADING";
 
 export const SET_SCHOOL_NAME = "SET_SCHOOL_NAME";
 export const LOGOUT = "LOGOUT";

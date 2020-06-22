@@ -12,28 +12,30 @@ import { appStateContext } from '../Contexts';
 import { getClasses, getStudents } from '../Actions';
 import FormatedTable from './Miniatures/FormatedTable';
 import PageContainer from './Miniatures/PageContainer';
-import { SET_STUDENTS_LOADING } from '../Actions/types';
+import useFetchDataWithLoading from './../Utils/useLoading';
 
 const tableFormatting = [{name: "Name", property: "name"}, {name: "Roll No", property: "rollNo"}, {name: "Class", property: 'className'}];
+const refreshBtnStyles = {display: 'flex', flexDirection: 'row-reverse', margin: '10px 0'};
 
 export default function Students() {
 
-    const { appState, dispatch } = useContext(appStateContext);
+    const { appState } = useContext(appStateContext);
 
     const [config, setConfig] = useState({
         addStudentDialogOpen: false,
         noClassesInProfileDialog: false,
     })
+    const [studentsLoading, getStudentsWithLoading] = useFetchDataWithLoading(getStudents, true);
+    const [classesLoading, getClassesWithLoading] = useFetchDataWithLoading(getClasses, true );
 
     useEffect(() => {
-        if (appState.students.array === null) getStudents(dispatch);
-        if(appState.classes.array === null) getClasses(dispatch);
+        if (appState.students.array === null) getStudentsWithLoading();
+        if(appState.classes.array === null) getClassesWithLoading();
     // eslint-disable-next-line
     }, [])
 
     const refresh = () => {
-        dispatch({type: SET_STUDENTS_LOADING});
-        getStudents(dispatch);
+        getStudentsWithLoading();
     }
 
     useEffect(() => {
@@ -50,7 +52,7 @@ export default function Students() {
 
     const createReducedInfoArray = () => {
         let students = [];
-        if(!appState.students.array) return null;
+        if(!appState.students.array) return [];
         appState.students.array.forEach(stud => {
             students.push((({
                 name: { firstName, lastName },
@@ -65,25 +67,29 @@ export default function Students() {
 
     return (
         <React.Fragment>
-            <PageContainer onFabClick={toggleFAB} addClassDialogOpen={config.addClassDialogOpen} pageTitle="Students Section" >
+            <PageContainer onFabClick={toggleFAB} addClassDialogOpen={config.addClassDialogOpen} pageTitle="Students Section" noFab={classesLoading} >
                 {
-                    appState.students.loading ? <LinearProgress /> :
-                        <React.Fragment>
-                            <div style={{display: 'flex', flexDirection: 'row-reverse', margin: '10px 0'}} >
-                                <Button onClick={refresh}  variant="outlined" >Refresh</Button>
+                    <React.Fragment>
+                        <div style={refreshBtnStyles}>
+                            <Button onClick={refresh}  variant="outlined" disabled={studentsLoading} >Refresh</Button>
+                        </div>
+                        {
+                            studentsLoading ? <LinearProgress /> :
+                            <div>
+                                {
+                                    <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} />
+                                }
+                                <Dialog open={config.noClassesInProfileDialog} onClose={() => { setConfig({ ...config, noClassesInProfileDialog: false }) }}>
+                                    <DialogTitle>We need Some More Data</DialogTitle>
+                                    <DialogContent>In order to create student you will need to add class first</DialogContent>
+                                    <DialogActions>
+                                        <Button onClick={() => setConfig({ ...config, noClassesInProfileDialog: false })} >Okey</Button>
+                                    </DialogActions>
+                                </Dialog>
+                                { classesLoading ? null : <AddStudentForm open={config.addStudentDialogOpen} toggleFAB={toggleFAB} />}
                             </div>
-                            {
-                                <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} />
-                            }
-                            <Dialog open={config.noClassesInProfileDialog} onClose={() => { setConfig({ ...config, noClassesInProfileDialog: false }) }}>
-                                <DialogTitle>We need Some More Data</DialogTitle>
-                                <DialogContent>In order to create student you will need to add class first</DialogContent>
-                                <DialogActions>
-                                    <Button onClick={() => setConfig({ ...config, noClassesInProfileDialog: false })} >Okey</Button>
-                                </DialogActions>
-                            </Dialog>
-                            <AddStudentForm open={config.addStudentDialogOpen} toggleFAB={toggleFAB} />
-                        </React.Fragment>
+                        }
+                    </React.Fragment>
                 }
             </PageContainer>
 

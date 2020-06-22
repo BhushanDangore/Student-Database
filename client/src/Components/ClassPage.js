@@ -3,27 +3,28 @@ import PageContainer from './Miniatures/PageContainer'
 import { useParams } from 'react-router'
 import FormatedTable from './Miniatures/FormatedTable';
 import { Typography, LinearProgress } from '@material-ui/core';
-import { getClass } from '../Actions';
+import { getClassStudents } from '../Actions';
 import { appStateContext } from './../Contexts/index';
-import { SET_CLASSES_LOADING } from './../Actions/types';
+import useFetchDataWithLoading from './../Utils/useLoading';
 
 const tableFormatting = [{name: "Student Name", property: 'name'}, {name: "Roll Number", property: 'rollNo'}, {name: "Mobile Number", property: 'studentMobileNo'}]
 
 export default function ClassPage() {
     let { class_name } = useParams();
 
-    const {appState, dispatch} = useContext(appStateContext);
+    const {appState} = useContext(appStateContext);
     let reducedStudentsObject;
 
+    const [ loading, getClassStudentsWL ] = useFetchDataWithLoading(getClassStudents, true);
+
     useEffect(() => {
-        getClass(class_name, dispatch)
-        dispatch({type: SET_CLASSES_LOADING});
+        getClassStudentsWL(class_name)
         // eslint-disable-next-line
     },[])
     
     const createReducedInfoArray = () => {
         let students = [];
-        if(appState.loadings.students) return [];
+        if(!appState.students.array) return [];
         appState.students.array.forEach(stud => {
             if(stud.class.className === class_name)
             students.push((({
@@ -33,7 +34,6 @@ export default function ClassPage() {
                 class : {className}
             }) => ({name: `${firstName} ${lastName}`, rollNo, studentMobileNo, className }))(stud))
         });
-        console.log("Calculated");
         return students;
     }
 
@@ -42,7 +42,7 @@ export default function ClassPage() {
     return (
         <PageContainer noFab={true} pageTitle={`Class`} >
             <Typography variant="h6" gutterBottom >Students </Typography>
-            { appState.loadings.students ? <LinearProgress /> : <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} /> }
+            { loading ? <LinearProgress /> : <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} /> }
         </PageContainer>
     )
 }
