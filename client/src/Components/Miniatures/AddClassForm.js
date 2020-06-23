@@ -1,7 +1,7 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import { makeStyles, Dialog, Typography, TextField, Button, Divider } from '@material-ui/core';
-import { appStateContext } from '../../Contexts';
 import { saveClassDataInDB } from './../../Actions/index';
+import useFetchDataWithLoading from './../../Utils/useLoading';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -32,9 +32,11 @@ export default function AddClassForm({open, closeForm}) {
         classNumber: 0,
     })
     const [error, setError] = React.useState(false)
-    const { dispatch } = useContext(appStateContext);
+
+    const [isSaving, saveClassToServer ] = useFetchDataWithLoading(saveClassDataInDB);
+
     const saveClassData = () => {
-        if(state.className !== "" && state.classNumber > 0) return saveClassDataInDB(state, dispatch);
+        if(state.className !== "" && state.classNumber > 0) return saveClassToServer(state);
         setError(true);
     }
 
@@ -65,7 +67,9 @@ export default function AddClassForm({open, closeForm}) {
                     onClick={saveClassData} 
                     fullWidth 
                     color='secondary' 
-                    variant='contained'>
+                    variant='contained'
+                    disabled={isSaving}
+                    >
                         Save
                 </Button>
             </div>

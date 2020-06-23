@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core'
 import AddStudentForm from './Miniatures/AddStudentForm';
 import { appStateContext } from '../Contexts';
-import { getClasses, getStudents } from '../Actions';
+import { getStudents } from '../Actions';
 import FormatedTable from './Miniatures/FormatedTable';
 import PageContainer from './Miniatures/PageContainer';
 import useFetchDataWithLoading from './../Utils/useLoading';
@@ -26,17 +26,11 @@ export default function Students() {
         noClassesInProfileDialog: false,
     })
     const [studentsLoading, getStudentsWithLoading] = useFetchDataWithLoading(getStudents, true);
-    const [classesLoading, getClassesWithLoading] = useFetchDataWithLoading(getClasses, true );
 
     useEffect(() => {
         if (appState.students.array === null) getStudentsWithLoading();
-        if(appState.classes.array === null) getClassesWithLoading();
     // eslint-disable-next-line
     }, [])
-
-    const refresh = () => {
-        getStudentsWithLoading();
-    }
 
     useEffect(() => {
         setConfig({...config, addStudentDialogOpen: false});    //To close the dialog after student is saved
@@ -44,7 +38,6 @@ export default function Students() {
     }, [appState.students.array])
 
     const toggleFAB = () => {
-
         if (appState.classes.array.length === 0) return setConfig({ ...config, addStudentDialogOpen: false, noClassesInProfileDialog: true })
 
         setConfig({ ...config, addStudentDialogOpen: !config.addStudentDialogOpen });
@@ -65,9 +58,13 @@ export default function Students() {
 
     const reducedStudentsObject = React.useMemo(createReducedInfoArray, [appState.students.array]);
 
+    const refresh = () => {
+        getStudentsWithLoading();
+    }
+
     return (
         <React.Fragment>
-            <PageContainer onFabClick={toggleFAB} addClassDialogOpen={config.addClassDialogOpen} pageTitle="Students Section" noFab={classesLoading} >
+            <PageContainer onFabClick={toggleFAB} addClassDialogOpen={config.addClassDialogOpen} pageTitle="Students Section" >
                 {
                     <React.Fragment>
                         <div style={refreshBtnStyles}>
@@ -86,7 +83,7 @@ export default function Students() {
                                         <Button onClick={() => setConfig({ ...config, noClassesInProfileDialog: false })} >Okey</Button>
                                     </DialogActions>
                                 </Dialog>
-                                { classesLoading ? null : <AddStudentForm open={config.addStudentDialogOpen} toggleFAB={toggleFAB} />}
+                                <AddStudentForm open={config.addStudentDialogOpen} toggleFAB={toggleFAB} />
                             </div>
                         }
                     </React.Fragment>

@@ -9,7 +9,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Home, AppBar, ProfileConfigure, Loading, LoginPage } from './Components';
 import { appStateContext } from './Contexts/'
 import reducer from './Reducers/'
-import { getUser } from './Actions';
+import { getUser, setDispatchRef } from './Actions';
 import useFetchDataWithLoading from './Utils/useLoading';
 
 const Students = lazy(() => import('./Components/Students'));
@@ -46,11 +46,7 @@ const initialState = {
     students: {
         array: null,
         loading: true,
-    },
-    loadings: {
-        user: true,
-        classes: true,
-        students: true,
+        isInitiallyLoaded: false,
     }
 }
 
@@ -61,6 +57,8 @@ function App({ darkMode, setDarkMode }) {
     const [state, dispatch] = useReducer(reducer, initialState)
     const [mobileOpen, setMobileOpen] = useState(false);    //Drawer Open State for Mobile UI
     const [loadingUser, fetchUser] = useFetchDataWithLoading(getUser, true, dispatch);
+
+    setDispatchRef(dispatch);
 
     useEffect(() => {
         fetchUser();

@@ -10,7 +10,13 @@ import {
     GET_CLASS_STUDENTS,
 } from './types';
 
-export function getUser(dispatch) {
+let dispatch;
+
+export function setDispatchRef(ref){
+    dispatch = ref;
+}
+
+export function getUser() {
         return axios.get("/api/user")
             .then( res => {
                 dispatch({ type: GET_USER, payload: res.data })
@@ -20,7 +26,7 @@ export function getUser(dispatch) {
             })
 }
 
-export function getClasses(dispatch) {
+export function getClasses() {
 
     return axios.get('/api/classes')
         .then( res => {
@@ -31,7 +37,7 @@ export function getClasses(dispatch) {
         })
 }
 
-export function getStudents(dispatch) {
+export function getStudents() {
 
     return axios.get('/api/students/')
         .then( res => {
@@ -40,7 +46,7 @@ export function getStudents(dispatch) {
         .catch( res => dispatch({ type: REQUEST_FAILED, payload: res.data }))
 }
 
-export function saveStudent(student, dispatch) {
+export function saveStudent(student) {
     return axios({
         method: 'POST',
         url: '/api/students',
@@ -56,14 +62,14 @@ export function saveStudent(student, dispatch) {
 
 }
 
-export function getClassStudents(dispatch, className) {
+export function getClassStudents(className) {
 
     return axios.get(`/api/classes/class/${className}`)
         .then(res => dispatch({type: GET_CLASS_STUDENTS, payload: res.data}))
         .catch(res => dispatch({ type: REQUEST_FAILED, payload: res.data }))
 }
 
-export function saveClassDataInDB(classData, dispatch) {
+export function saveClassDataInDB(classData) {
     return axios({
         method: 'POST',
         url: '/api/classes/class',
@@ -80,6 +86,6 @@ export function saveClassDataInDB(classData, dispatch) {
     .catch( res => dispatch({ type: REQUEST_FAILED, payload: res.data }) )
 }
 
-export function logout(dispatch) {
+export function logout() {
     dispatch({ type: LOGOUT })
 }

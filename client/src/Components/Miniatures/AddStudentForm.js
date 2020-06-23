@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Dialog, InputLabel, Button, TextField, makeStyles, Typography, Divider, NativeSelect } from '@material-ui/core';
+import { Dialog, InputLabel, Button, TextField, makeStyles, Typography, Divider, NativeSelect, LinearProgress } from '@material-ui/core';
 import { useForm } from "react-hook-form";
 import { appStateContext } from '../../Contexts';
 // eslint-disable-next-line
-import { saveStudent } from '../../Actions';
+import { saveStudent, getClasses } from '../../Actions';
+import useFetchDataWithLoading from './../../Utils/useLoading';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -58,9 +59,13 @@ export default function AddStudentForm({ open, toggleFAB }) {
     }
     const [student, setStudent] = useState(defaultStudent)
 
-    const { appState, dispatch } = useContext(appStateContext);
+    const { appState } = useContext(appStateContext);
 
     const { register, handleSubmit, errors } = useForm();
+
+    const [loadingClassesNames, fetchClassesData] = useFetchDataWithLoading(getClasses, true);
+
+    const [saveStudentLoading, saveStudentWithLoading] = useFetchDataWithLoading(saveStudent, false);
 
     useEffect(() => {
         const data = localStorage.getItem('newStudentFormData');
@@ -68,6 +73,8 @@ export default function AddStudentForm({ open, toggleFAB }) {
             const prevStdData = JSON.parse(data);
             setStudent({ ...prevStdData });
         }
+
+        fetchClassesData();
         // eslint-disable-next-line
     }, [])
 
@@ -78,7 +85,7 @@ export default function AddStudentForm({ open, toggleFAB }) {
         delete student.MName;
         student.name = { FName, LName, MName }
 
-        saveStudent(student, dispatch)
+        saveStudentWithLoading(student);
     }
 
     const closeForm = () => {
@@ -89,10 +96,6 @@ export default function AddStudentForm({ open, toggleFAB }) {
         toggleFAB()
     }
 
-    const clearForm = () => {
-        localStorage.removeItem('newStudentFormData');
-        setStudent(defaultStudent)
-    }
     return (
         <Dialog
             open={open}
@@ -102,10 +105,7 @@ export default function AddStudentForm({ open, toggleFAB }) {
             <form onSubmit={handleSubmit(initiateStdDataSave)} >
                 <pre>{errors.exampleRequired && <span>{errors}</span>}</pre>
                 <div className={`${classes.dialogContainer} ${classes.form}`}>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography variant='h6' >Add Student</Typography>
-                        <Button variant='outlined' onClick={clearForm} color="primary" >Clear</Button>
-                    </div>
+                    <Typography variant='h6' >Add Student</Typography>
                     <Divider />
                     <div className={classes.multifields}>
                         <TextField
@@ -221,6 +221,7 @@ export default function AddStudentForm({ open, toggleFAB }) {
                             error={errors.class1}
                         >
                             {
+                                loadingClassesNames ? <LinearProgress /> :
                                 appState.classes.array.map((elm, index) => (<option key={index} >{elm.className}</option>))
                             }
                         </NativeSelect>
@@ -281,6 +282,7 @@ export default function AddStudentForm({ open, toggleFAB }) {
                         color='secondary'
                         variant='contained'
                         type="submit"
+                        disabled={saveStudentLoading}
                     >
                         Save
                     </Button>

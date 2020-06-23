@@ -31,6 +31,10 @@ function userReducer(state, action) {
 function classesReducer(state, action) {
     switch(action.type) {
         case GET_CLASSES:
+            action.payload.forEach(elem => {
+                elem.isStudentsFetched = false;
+                elem.studentsIndexes = null;
+            })
             return { array: action.payload };
 
         case SAVE_CLASS:
@@ -43,16 +47,18 @@ function classesReducer(state, action) {
 
 function studentsReducer(state, action) {
     switch(action.type) {
+        
         case GET_STUDENTS:
-            return { array: action.payload }
+            return { array: action.payload, isInitiallyLoaded: true }
 
         case SAVE_STUDENT:
             return { array: action.payload };
 
-        case GET_CLASS_STUDENTS: 
-            if(!state.array) return { array: action.payload.students };
-
+        case GET_CLASS_STUDENTS:
             let rcvdClassStudents = action.payload.students;
+            
+            if(!state.array) return { array: rcvdClassStudents };
+
             const unExistedStudents = rcvdClassStudents.filter(student => {                     // Check if the student already exist on client side
                 for(const stateStudent of state.array) if(stateStudent.aadharNumber === student.aadharNumber) return false; 
                 return true;

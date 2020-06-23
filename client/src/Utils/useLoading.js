@@ -1,15 +1,11 @@
 import { useState } from 'react';
 
-let _dispatch;
-
-export default function useFetchDataWithLoading(action, defaultState, dispatch) {
+export default function useFetchDataWithLoading(action, defaultState) {
     const [isLoading, setIsLoading] = useState(defaultState || false);
-    
-    if(!_dispatch)  _dispatch = dispatch;
     
     function fetchWithLoading(data){
         setIsLoading(true);
-        action(_dispatch, data)
+        action(data)
             .then(()=> {
                 setIsLoading(false);
             })
