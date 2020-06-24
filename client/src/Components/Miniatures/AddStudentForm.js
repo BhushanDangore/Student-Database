@@ -61,7 +61,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
         const mappedData = Object.keys(keyMap).reduce((obj, k) => Object.assign(obj, { [keyMap[k]]: student[k] }),{});
         mappedData.name = { firstName: FName, lastName: LName, middleName: MName }
         saveNewStudentData(mappedData)
-    }
+    } 
 
     const closeForm = () => {
         toggleFAB()
