@@ -19,3 +19,7 @@ export const SET_USER_LOADING = "SET_USER_LOADING";
 export const SET_SCHOOL_NAME = "SET_SCHOOL_NAME";
 export const LOGOUT = "LOGOUT";
 export const REQUEST_FAILED = "REQUEST_FAILED";
+
+export const CLOSE_DRAWER = "CLOSE_DRAWER";
+export const TOGGLE_DRAWER = "TOGGLE_DRAWER";
+

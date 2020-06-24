@@ -33,59 +33,64 @@ const useStyles = makeStyles((theme) => {
     }
 });
 
-const removeLoading = () => document.getElementById('loadingIFrame').classList.add("invisible");
+const removeLoading = () => {
+    const loader = document.getElementById('loadingIFrame')
+    loader.addEventListener('transitionend', () => {
+        loader.remove();
+    })
+    loader.classList.add("invisible");
+}
 
 function App(props) {
 
     const { darkMode, setDarkMode } = props
-    
+
     const classes = useStyles();
 
-    if(props.loggedIn === null) props.fetchUser();
+    if (props.loggedIn === null) props.fetchUser();
 
     useEffect(() => {
-        console.log("App Mounted", props.loggedIn === null)
-        if(props.loggedIn !== null) removeLoading();
-    },[props.loggedIn])
+        if (props.loggedIn !== null) removeLoading();
+    }, [props.loggedIn])
 
     const [mobileOpen, setMobileOpen] = useState(false);    //Drawer Open State for Mobile UI
-    
+
     // eslint-disable-next-line
     const handleDrawerToggle = useCallback((closeOnly) => setMobileOpen(closeOnly === true ? false : !mobileOpen), []);
 
-    // console.info("App State: ", state);
+
 
     return (
         <div className="App">
             <Router>
                 <div className={classes.wrapper}>
-                        <CssBaseline />
+                    <CssBaseline />
                         <AppBar handleDrawerToggle={handleDrawerToggle} setDarkMode={setDarkMode} darkMode={darkMode} />
                         {props.loggedIn === null ? null :
                             props.loggedIn ?
-                                <React.Fragment>
-                                    <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
-                                    <div className={classes.mainContent}>
-                                        <Container>
-                                            <Suspense fallback={<LinearProgress />}>
-                                                <Switch >
-                                                    <Route path='/result' component={Result} />
-                                                    <Route path='/students' component={Students} />
-                                                    <Route path='/teachers' component={Teachers} />
-                                                    <Route path='/classes' component={Classes} />
-                                                    <Route path='/' component={Home} exact />
-                                                </Switch>
-                                            </Suspense>
-                                        </Container>
-                                    </div>
-                                    { props.isProfileComplet ? null : <ProfileConfigure /> }
-                                </React.Fragment>
-                                :
+                            <React.Fragment>
+                                <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
                                 <div className={classes.mainContent}>
-                                    <Route path='/login' exact><LoginPage /></Route>
+                                    <Container>
+                                        <Suspense fallback={<LinearProgress />}>
+                                            <Switch >
+                                                <Route path='/result' component={Result} />
+                                                <Route path='/students' component={Students} />
+                                                <Route path='/teachers' component={Teachers} />
+                                                <Route path='/classes' component={Classes} />
+                                                <Route path='/' component={Home} exact />
+                                            </Switch>
+                                        </Suspense>
+                                    </Container>
                                 </div>
+                                {props.isProfileComplet ? null : <ProfileConfigure />}
+                            </React.Fragment>
+                            :
+                            <div className={classes.mainContent}>
+                                <Route path='/'><LoginPage /></Route>
+                            </div>
                         }
-                    </div>
+                </div>
             </Router>
         </div>
     );

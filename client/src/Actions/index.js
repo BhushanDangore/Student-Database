@@ -7,8 +7,13 @@ import {
     SAVE_STUDENT, 
     SAVE_CLASS, 
     GET_CLASS_STUDENTS,
-    SET_SCHOOL_NAME
+    SET_SCHOOL_NAME,
+    TOGGLE_DRAWER,
+    CLOSE_DRAWER
 } from './types';
+
+export const toggleDrawer = { type: TOGGLE_DRAWER }
+export const cloaseDrawer = { type: CLOSE_DRAWER }
 
 export function fetchUser() {
     return function (dispatch) {

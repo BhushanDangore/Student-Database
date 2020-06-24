@@ -24,7 +24,7 @@
     -->
     <title>React App</title>
     <style> 
-        iframe {
+        #loadingIFrame {
             border: 0;
             position: fixed;
             top: 0;
@@ -34,12 +34,10 @@
             width: 100%;
             height: 100%;
             z-index: 100000;
-            background-color: rgb(189, 189, 189);
-            transition: transform .15s, opacity .25s .1s;
-            transform: translateX(0);
+            background-color: #565656;
+            transition: opacity .15s ease-in-out;
         }
         .invisible {
-            transform: translateX(100vw);
             opacity: 0;
         }
     </style>

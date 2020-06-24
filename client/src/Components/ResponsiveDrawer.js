@@ -7,6 +7,8 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import ClassIcon from '@material-ui/icons/Class';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { toggleDrawer, cloaseDrawer } from '../Actions'
 
 const drawerWidth = 240;
 const container = window.document.body;
@@ -33,12 +35,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function ResponsiveDrawer({ mobileOpen, handleDrawerToggle }) {
+function ResponsiveDrawer({ dispatch, mobileOpen }) {
     const classes = useStyles();
     
     // eslint-disable-next-line
-    const closeDrawer  = useCallback(() => handleDrawerToggle(true),[]);
-
+    const closeDrawer  = () => dispatch(cloaseDrawer)
+    
     const drawer = (
         <div>
             <div className={classes.toolbar} />
@@ -118,6 +120,4 @@ function ResponsiveDrawer({ mobileOpen, handleDrawerToggle }) {
     );
 }
 
-export default React.memo(ResponsiveDrawer, (prevProp, nextProp) => {
-    return prevProp.mobileOpen === nextProp.mobileOpen;
-})
+export default connect(store=> (store.config))(ResponsiveDrawer);

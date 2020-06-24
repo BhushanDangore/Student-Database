@@ -4,6 +4,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import { connect } from 'react-redux';
+import { toggleDrawer } from './../Actions/index';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +30,10 @@ const useStyles = makeStyles((theme) => ({
 
 function AppBar(props) {
 
-    const { handleDrawerToggle, setDarkMode, darkMode, loggedIn, userName, profilePic } = props;
+    const { setDarkMode, darkMode, loggedIn, userName, profilePic, dispatch } = props;
+
+    const openDrawer = () => dispatch(toggleDrawer)
+
 
     const classes = useStyles();
 
@@ -41,7 +45,7 @@ function AppBar(props) {
             <Toolbar>
                 {
                     loggedIn === true ?
-                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle} className={classes.menuButton}>
+                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={openDrawer} className={classes.menuButton}>
                             <MenuIcon />
                         </IconButton>
                         :
