@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy, useCallback } from 'react';
+import React, { useState, useEffect, Suspense, lazy, useCallback } from 'react';
 
 import './App.css';
 
@@ -6,7 +6,7 @@ import ResponsiveDrawer from './Components/ResponsiveDrawer';
 import { CssBaseline, Container, makeStyles, LinearProgress } from '@material-ui/core';
 import { BrowserRouter as Router } from "react-router-dom";
 import { Switch, Route } from 'react-router-dom';
-import { Home, AppBar, ProfileConfigure, Loading, LoginPage } from './Components';
+import { Home, AppBar, ProfileConfigure, LoginPage } from './Components';
 import { connect } from "react-redux";
 import { fetchUser } from './Actions/index';
 
@@ -33,6 +33,8 @@ const useStyles = makeStyles((theme) => {
     }
 });
 
+const removeLoading = () => document.getElementById('loadingIFrame').classList.add("invisible");
+
 function App(props) {
 
     const { darkMode, setDarkMode } = props
@@ -41,13 +43,12 @@ function App(props) {
 
     if(props.loggedIn === null) props.fetchUser();
 
-    // const [state, dispatch] = useReducer(reducer, initialState)
+    useEffect(() => {
+        console.log("App Mounted", props.loggedIn === null)
+        if(props.loggedIn !== null) removeLoading();
+    },[props.loggedIn])
+
     const [mobileOpen, setMobileOpen] = useState(false);    //Drawer Open State for Mobile UI
-    // const [loadingUser, fetchUser] = useFetchDataWithLoading(getUser, true, dispatch);
-
-    // setDispatchRef(dispatch);
-
-    
     
     // eslint-disable-next-line
     const handleDrawerToggle = useCallback((closeOnly) => setMobileOpen(closeOnly === true ? false : !mobileOpen), []);
@@ -60,7 +61,7 @@ function App(props) {
                 <div className={classes.wrapper}>
                         <CssBaseline />
                         <AppBar handleDrawerToggle={handleDrawerToggle} setDarkMode={setDarkMode} darkMode={darkMode} />
-                        {props.loggedIn === null ? <Loading active={true} /> :
+                        {props.loggedIn === null ? null :
                             props.loggedIn ?
                                 <React.Fragment>
                                     <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />

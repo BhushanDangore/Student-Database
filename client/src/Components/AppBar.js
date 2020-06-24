@@ -29,18 +29,18 @@ const useStyles = makeStyles((theme) => ({
 
 function AppBar(props) {
 
-    const { handleDrawerToggle, setDarkMode, darkMode, user } = props;
+    const { handleDrawerToggle, setDarkMode, darkMode, loggedIn, userName, profilePic } = props;
 
     const classes = useStyles();
 
     return (
         <AppBarDefault
             position="static"
-            style={user.loggedIn ? null : { width: "100%" }}
+            style={loggedIn ? null : { width: "100%" }}
             className={classes.appBar}>
             <Toolbar>
                 {
-                    user.loggedIn === true ?
+                    loggedIn === true ?
                         <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle} className={classes.menuButton}>
                             <MenuIcon />
                         </IconButton>
@@ -54,10 +54,10 @@ function AppBar(props) {
                     <Brightness4Icon />
                 </IconButton>
                 {
-                    user.loggedIn === null ? null : user.loggedIn ?
+                    loggedIn === null ? null : loggedIn ?
                         <React.Fragment>
                             <Button color="inherit" variant="outlined" size='small' href="/api/logout" className={classes.margin} > Logout </Button>
-                            <Avatar alt={user.userName} src={user.profilePic} />
+                            <Avatar alt={userName} src={profilePic} />
                         </React.Fragment>
                         :
                         <Link to='/login'>
@@ -69,4 +69,4 @@ function AppBar(props) {
     )
 }
 
-export default connect(state => (state))(AppBar);
+export default connect(state => (state.user))(AppBar);

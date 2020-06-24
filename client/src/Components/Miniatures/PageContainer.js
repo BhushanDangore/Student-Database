@@ -6,6 +6,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(2),
         margin: `${theme.spacing(4)}px auto`,
+        position: "relative"
     },
     fab: {
         position: "sticky",
@@ -21,7 +22,7 @@ function PageContainer(props) {
 
     return (
         <React.Fragment>
-            <Paper variant="outlined" className={classes.root} style={{ position: "relative" }}>
+            <Paper variant="outlined" className={classes.root} >
                 <Typography variant='h4' color='textSecondary' display='inline'>{ pageTitle }</Typography>
                 <Divider style={{ margin: "15px 0px" }} />
                 {

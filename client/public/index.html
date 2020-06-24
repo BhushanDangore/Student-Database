@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
+    <meta name="description" content="Web site created using create-react-app" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -25,9 +23,31 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
-  </head>
-  <body>
+    <style> 
+        iframe {
+            border: 0;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100000;
+            background-color: rgb(189, 189, 189);
+            transition: transform .15s, opacity .25s .1s;
+            transform: translateX(0);
+        }
+        .invisible {
+            transform: translateX(100vw);
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <iframe src="/loading.html" id="loadingIFrame">Your browser doesn't support iFrames.</iframe>
     <div id="root"></div>
     <!--
       This HTML file is a template.
@@ -39,5 +59,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  </body>
+</body>
+
 </html>

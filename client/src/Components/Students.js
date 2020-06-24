@@ -16,35 +16,33 @@ import { connect } from 'react-redux';
 const tableFormatting = [{name: "Name", property: "name"}, {name: "Roll No", property: "rollNo"}, {name: "Class", property: 'className'}];
 const refreshBtnStyles = {display: 'flex', flexDirection: 'row-reverse', margin: '10px 0'};
 
-function Students(props) {
+function Students({ studentsArray, classesArray, classesCount, fetchStudents, fetchClasses }) {
 
-    console.log("Students",props);
-    
     const [config, setConfig] = useState({
         addStudentDialogOpen: false,
         noClassesInProfileDialog: false,
     })
 
     useEffect(()=> {
-        if(props.studentsArray === null) props.fetchStudents();
-        if(props.classesArray === null) props.fetchClasses();
+        if(studentsArray === null) fetchStudents();
+        if(classesArray === null) fetchClasses();
     // eslint-disable-next-line
     },[])
     
     useEffect(() => {
         setConfig({...config, addStudentDialogOpen: false});
     // eslint-disable-next-line
-    }, [props.studentsArray])
+    }, [studentsArray])
 
     const toggleFAB = () => {
-        if (props.classesCount === 0) return setConfig({ ...config, addStudentDialogOpen: false, noClassesInProfileDialog: true })
+        if (classesCount === 0) return setConfig({ ...config, addStudentDialogOpen: false, noClassesInProfileDialog: true })
         setConfig({ ...config, addStudentDialogOpen: !config.addStudentDialogOpen });
     }
 
     const createReducedInfoArray = () => {
         let students = [];
-        if(props.studentsArray === null) return [];
-        props.studentsArray.forEach(stud => {
+        if(studentsArray === null) return [];
+        studentsArray.forEach(stud => {
             students.push((({
                 name: { firstName, lastName },
                 rollNo,
@@ -54,10 +52,10 @@ function Students(props) {
         return students;
     }
 
-    const reducedStudentsObject = React.useMemo(createReducedInfoArray, [props.studentsArray]);
+    const reducedStudentsObject = React.useMemo(createReducedInfoArray, [studentsArray]);
 
     const refresh = () => {
-
+        fetchStudents();
     }
 
     return (
@@ -66,10 +64,10 @@ function Students(props) {
                 {
                     <React.Fragment>
                         <div style={refreshBtnStyles}>
-                            <Button onClick={refresh}  variant="outlined" disabled={props.studentsArray === null} >Refresh</Button>
+                            <Button onClick={refresh}  variant="outlined" disabled={studentsArray === null} >Refresh</Button>
                         </div>
                         {
-                            props.studentsArray === null ? <LinearProgress /> :
+                            studentsArray === null ? <LinearProgress /> :
                             <div>
                                 {
                                     <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} />
@@ -87,7 +85,6 @@ function Students(props) {
                     </React.Fragment>
                 }
             </PageContainer>
-
         </React.Fragment>
     )
 }
