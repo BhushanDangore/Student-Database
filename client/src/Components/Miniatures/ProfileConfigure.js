@@ -1,43 +1,24 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import { Dialog, Button, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@material-ui/core';
-import axios from 'axios';
-import { appStateContext } from '../../Contexts/';
-import { REQUEST_FAILED, SET_SCHOOL_NAME } from './../../Actions/types';
+import { connect } from 'react-redux';
+import { saveProfileConfiguration } from '../../Actions';
 
-export default function ProfileConfigure() {
-    const { appState, dispatch } = useContext(appStateContext)
-    const user = appState.user;
+function ProfileConfigure(props) {
+
     const [config, setConfig] = React.useState({
         schoolName: "",
     });
     const [error, setError] = React.useState(false);
     const handleSave = () => {
         if(config.schoolName.length > 4){
-            axios({
-                method: 'POST',
-                url: '/api/user/school-name',
-                headers: {
-                    'Content-Type' : 'application/json; charset=UTF-8',
-                    'Accept': 'Token',
-                    "Access-Control-Allow-Origin": "*",
-                },
-                data: JSON.stringify(config),
-            })
-            .then( res => {
-                if(res.status === 201 && res.data.schoolName){
-                    dispatch({type: SET_SCHOOL_NAME, payload: res.data})
-                }
-            })
-            .catch( res => {
-                dispatch({type: REQUEST_FAILED, payload: res.data})
-            })
+            props.saveProfileConfiguration(config);
         }
         else return setError(true);
     }
     return (
         <React.Fragment>
             <Dialog
-                open={!user.isProfileComplet}
+                open={true}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description">
                 <DialogTitle id="alert-dialog-title">You Will Need To Complete Your Profile</DialogTitle>
@@ -66,3 +47,5 @@ export default function ProfileConfigure() {
         </React.Fragment>
     )
 }
+
+export default connect(store => (store.user), { saveProfileConfiguration })(ProfileConfigure)

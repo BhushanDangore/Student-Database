@@ -3,7 +3,7 @@ import { AppBar as AppBarDefault, Typography, Toolbar, IconButton, Button, makeS
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
-import { logout } from './../Actions/index';
+import { connect } from 'react-redux';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +27,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function AppBar({ handleDrawerToggle, setDarkMode, darkMode, user }) {
+function AppBar(props) {
+
+    const { handleDrawerToggle, setDarkMode, darkMode, user } = props;
 
     const classes = useStyles();
 
@@ -54,7 +56,7 @@ function AppBar({ handleDrawerToggle, setDarkMode, darkMode, user }) {
                 {
                     user.loggedIn === null ? null : user.loggedIn ?
                         <React.Fragment>
-                            <Button color="inherit" variant="outlined" size='small' href="/api/logout" onClick={logout} className={classes.margin} > Logout </Button>
+                            <Button color="inherit" variant="outlined" size='small' href="/api/logout" className={classes.margin} > Logout </Button>
                             <Avatar alt={user.userName} src={user.profilePic} />
                         </React.Fragment>
                         :
@@ -67,6 +69,4 @@ function AppBar({ handleDrawerToggle, setDarkMode, darkMode, user }) {
     )
 }
 
-export default React.memo(AppBar, (prvS, nextS) => {
-    return prvS.darkMode === nextS.darkMode && prvS.user  === nextS.user;
-});
+export default connect(state => (state))(AppBar);

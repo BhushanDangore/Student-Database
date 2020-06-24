@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles, Dialog, Typography, TextField, Button, Divider } from '@material-ui/core';
-import { saveClassDataInDB } from './../../Actions/index';
-import useFetchDataWithLoading from './../../Utils/useLoading';
+import { connect } from 'react-redux';
+import { saveNewClassData } from '../../Actions'
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function AddClassForm({open, closeForm}) {
+function AddClassForm({open, closeForm, saveNewClassData}) {
 
     const classes = useStyles();
     const [state, setState] = React.useState({
@@ -33,10 +33,8 @@ export default function AddClassForm({open, closeForm}) {
     })
     const [error, setError] = React.useState(false)
 
-    const [isSaving, saveClassToServer ] = useFetchDataWithLoading(saveClassDataInDB);
-
     const saveClassData = () => {
-        if(state.className !== "" && state.classNumber > 0) return saveClassToServer(state);
+        if(state.className !== "" && state.classNumber > 0) return saveNewClassData(state);
         setError(true);
     }
 
@@ -68,7 +66,7 @@ export default function AddClassForm({open, closeForm}) {
                     fullWidth 
                     color='secondary' 
                     variant='contained'
-                    disabled={isSaving}
+                    // disabled={isSaving} TODO: Add feature to disable button until data is saving.
                     >
                         Save
                 </Button>
@@ -77,3 +75,5 @@ export default function AddClassForm({open, closeForm}) {
         </React.Fragment>
     )
 }
+
+export default connect(null, { saveNewClassData })(AddClassForm)

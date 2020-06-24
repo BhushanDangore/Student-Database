@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Dialog, 
     DialogTitle, 
@@ -8,45 +8,43 @@ import {
     LinearProgress 
 } from '@material-ui/core'
 import AddStudentForm from './Miniatures/AddStudentForm';
-import { appStateContext } from '../Contexts';
-import { getStudents } from '../Actions';
 import FormatedTable from './Miniatures/FormatedTable';
 import PageContainer from './Miniatures/PageContainer';
-import useFetchDataWithLoading from './../Utils/useLoading';
+import { fetchStudents, fetchClasses } from '../Actions';
+import { connect } from 'react-redux';
 
 const tableFormatting = [{name: "Name", property: "name"}, {name: "Roll No", property: "rollNo"}, {name: "Class", property: 'className'}];
 const refreshBtnStyles = {display: 'flex', flexDirection: 'row-reverse', margin: '10px 0'};
 
-export default function Students() {
+function Students(props) {
 
-    const { appState } = useContext(appStateContext);
-
+    console.log("Students",props);
+    
     const [config, setConfig] = useState({
         addStudentDialogOpen: false,
         noClassesInProfileDialog: false,
     })
-    const [studentsLoading, getStudentsWithLoading] = useFetchDataWithLoading(getStudents, true);
 
-    useEffect(() => {
-        if (appState.students.array === null) getStudentsWithLoading();
+    useEffect(()=> {
+        if(props.studentsArray === null) props.fetchStudents();
+        if(props.classesArray === null) props.fetchClasses();
     // eslint-disable-next-line
-    }, [])
-
+    },[])
+    
     useEffect(() => {
-        setConfig({...config, addStudentDialogOpen: false});    //To close the dialog after student is saved
-        // eslint-disable-next-line
-    }, [appState.students.array])
+        setConfig({...config, addStudentDialogOpen: false});
+    // eslint-disable-next-line
+    }, [props.studentsArray])
 
     const toggleFAB = () => {
-        if (appState.classes.array.length === 0) return setConfig({ ...config, addStudentDialogOpen: false, noClassesInProfileDialog: true })
-
+        if (props.classesCount === 0) return setConfig({ ...config, addStudentDialogOpen: false, noClassesInProfileDialog: true })
         setConfig({ ...config, addStudentDialogOpen: !config.addStudentDialogOpen });
     }
 
     const createReducedInfoArray = () => {
         let students = [];
-        if(!appState.students.array) return [];
-        appState.students.array.forEach(stud => {
+        if(props.studentsArray === null) return [];
+        props.studentsArray.forEach(stud => {
             students.push((({
                 name: { firstName, lastName },
                 rollNo,
@@ -56,22 +54,22 @@ export default function Students() {
         return students;
     }
 
-    const reducedStudentsObject = React.useMemo(createReducedInfoArray, [appState.students.array]);
+    const reducedStudentsObject = React.useMemo(createReducedInfoArray, [props.studentsArray]);
 
     const refresh = () => {
-        getStudentsWithLoading();
+
     }
 
     return (
         <React.Fragment>
-            <PageContainer onFabClick={toggleFAB} addClassDialogOpen={config.addClassDialogOpen} pageTitle="Students Section" >
+            <PageContainer onFabClick={toggleFAB} pageTitle="Students Section" >
                 {
                     <React.Fragment>
                         <div style={refreshBtnStyles}>
-                            <Button onClick={refresh}  variant="outlined" disabled={studentsLoading} >Refresh</Button>
+                            <Button onClick={refresh}  variant="outlined" disabled={props.studentsArray === null} >Refresh</Button>
                         </div>
                         {
-                            studentsLoading ? <LinearProgress /> :
+                            props.studentsArray === null ? <LinearProgress /> :
                             <div>
                                 {
                                     <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} />
@@ -93,3 +91,5 @@ export default function Students() {
         </React.Fragment>
     )
 }
+
+export default connect(store => ({...store.students, classesArray: store.classes.classesArray }), { fetchStudents, fetchClasses })(Students)

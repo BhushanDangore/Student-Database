@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { Dialog, InputLabel, Button, TextField, makeStyles, Typography, Divider, NativeSelect, LinearProgress } from '@material-ui/core';
+import React from 'react'
+import { Dialog, InputLabel, Button, TextField, makeStyles, Typography, Divider, NativeSelect } from '@material-ui/core';
 import { useForm } from "react-hook-form";
-import { appStateContext } from '../../Contexts';
-// eslint-disable-next-line
-import { saveStudent, getClasses } from '../../Actions';
-import useFetchDataWithLoading from './../../Utils/useLoading';
+import { connect } from 'react-redux';
+import { saveNewStudentData, fetchClasses } from '../../Actions';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -34,49 +32,10 @@ const useStyles = makeStyles((theme) => ({
 }
 ))
 
-export default function AddStudentForm({ open, toggleFAB }) {
+function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
     const classes = useStyles();
-    const defaultStudent = {
-        name: {
-            firstName: "",
-            middleName: "",
-            lastName: "",
-        },
-        motherName: "",
-        fatherName: "",
-        studentMobileNo: "",
-        parentMobileNo: "",
-        parentMobileNo2: "",
-        aadharNumber: "",
-        DOB: "",
-        admissionDate: "",
-        gender: "Male",
-        category: "OBC",
-        caste: "",
-        accountNo: "",
-        IFSC: "",
-        class: "",
-    }
-    const [student, setStudent] = useState(defaultStudent)
-
-    const { appState } = useContext(appStateContext);
 
     const { register, handleSubmit, errors } = useForm();
-
-    const [loadingClassesNames, fetchClassesData] = useFetchDataWithLoading(getClasses, true);
-
-    const [saveStudentLoading, saveStudentWithLoading] = useFetchDataWithLoading(saveStudent, false);
-
-    useEffect(() => {
-        const data = localStorage.getItem('newStudentFormData');
-        if (data !== null) {
-            const prevStdData = JSON.parse(data);
-            setStudent({ ...prevStdData });
-        }
-
-        fetchClassesData();
-        // eslint-disable-next-line
-    }, [])
 
     const initiateStdDataSave = (student) => {
         const {FName, LName, MName} = student;
@@ -85,14 +44,10 @@ export default function AddStudentForm({ open, toggleFAB }) {
         delete student.MName;
         student.name = { FName, LName, MName }
 
-        saveStudentWithLoading(student);
+        //TODO: add save here.
     }
 
     const closeForm = () => {
-        localStorage.setItem('newStudentFormData', JSON.stringify(student));
-        window.onbeforeunload = () => {
-            localStorage.removeItem('newStudentFormData');
-        };
         toggleFAB()
     }
 
@@ -221,8 +176,7 @@ export default function AddStudentForm({ open, toggleFAB }) {
                             error={errors.class1}
                         >
                             {
-                                loadingClassesNames ? <LinearProgress /> :
-                                appState.classes.array.map((elm, index) => (<option key={index} >{elm.className}</option>))
+                                props.classesArray === null ? null : props.classesArray.map((elm, index) => (<option key={index} >{elm.className}</option>))
                             }
                         </NativeSelect>
                     </div>
@@ -282,7 +236,7 @@ export default function AddStudentForm({ open, toggleFAB }) {
                         color='secondary'
                         variant='contained'
                         type="submit"
-                        disabled={saveStudentLoading}
+                        // disabled={} TODO: Make with loading to disable button.
                     >
                         Save
                     </Button>
@@ -291,3 +245,5 @@ export default function AddStudentForm({ open, toggleFAB }) {
         </Dialog>
     )
 }
+
+export default connect(store => (store.classes), { saveNewStudentData, fetchClasses })(AddStudentForm)

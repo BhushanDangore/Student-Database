@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy, useReducer, useCallback } from 'react';
+import React, { useState, Suspense, lazy, useCallback } from 'react';
 
 import './App.css';
 
@@ -7,10 +7,8 @@ import { CssBaseline, Container, makeStyles, LinearProgress } from '@material-ui
 import { BrowserRouter as Router } from "react-router-dom";
 import { Switch, Route } from 'react-router-dom';
 import { Home, AppBar, ProfileConfigure, Loading, LoginPage } from './Components';
-import { appStateContext } from './Contexts/'
-import reducer from './Reducers/'
-import { getUser, setDispatchRef } from './Actions';
-import useFetchDataWithLoading from './Utils/useLoading';
+import { connect } from "react-redux";
+import { fetchUser } from './Actions/index';
 
 const Students = lazy(() => import('./Components/Students'));
 const Result = lazy(() => import('./Components/Result'));
@@ -34,78 +32,62 @@ const useStyles = makeStyles((theme) => {
         }
     }
 });
-const initialState = {
-    user: {
-        loggedIn: null,
-        loading: true,
-    },
-    classes: {
-        array: null,
-        loading: true,
-    },
-    students: {
-        array: null,
-        loading: true,
-        isInitiallyLoaded: false,
-    }
-}
 
-function App({ darkMode, setDarkMode }) {
+function App(props) {
 
+    const { darkMode, setDarkMode } = props
+    
     const classes = useStyles();
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+    if(props.loggedIn === null) props.fetchUser();
+
+    // const [state, dispatch] = useReducer(reducer, initialState)
     const [mobileOpen, setMobileOpen] = useState(false);    //Drawer Open State for Mobile UI
-    const [loadingUser, fetchUser] = useFetchDataWithLoading(getUser, true, dispatch);
+    // const [loadingUser, fetchUser] = useFetchDataWithLoading(getUser, true, dispatch);
 
-    setDispatchRef(dispatch);
+    // setDispatchRef(dispatch);
 
-    useEffect(() => {
-        fetchUser();
-        // eslint-disable-next-line
-    }, [])
+    
     
     // eslint-disable-next-line
     const handleDrawerToggle = useCallback((closeOnly) => setMobileOpen(closeOnly === true ? false : !mobileOpen), []);
 
-    console.info("App State: ", state);
+    // console.info("App State: ", state);
 
     return (
         <div className="App">
             <Router>
                 <div className={classes.wrapper}>
                         <CssBaseline />
-                        <AppBar handleDrawerToggle={handleDrawerToggle} setDarkMode={setDarkMode} darkMode={darkMode} user={ state.user } />
-                        {loadingUser ? <Loading active={true} /> :
-                            state.user.loggedIn ?
+                        <AppBar handleDrawerToggle={handleDrawerToggle} setDarkMode={setDarkMode} darkMode={darkMode} />
+                        {props.loggedIn === null ? <Loading active={true} /> :
+                            props.loggedIn ?
                                 <React.Fragment>
-                                    <appStateContext.Provider value={{ appState: state, dispatch }}>
-                                        <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
-                                        <div className={classes.mainContent}>
-                                            <Container>
-                                                <Suspense fallback={<LinearProgress />}>
-                                                    <Switch >
-                                                        <Route path='/result' component={Result} />
-                                                        <Route path='/students' component={Students} />
-                                                        <Route path='/teachers' component={Teachers} />
-                                                        <Route path='/classes' component={Classes} />
-                                                        <Route path='/' component={Home} exact />
-                                                    </Switch>
-                                                </Suspense>
-                                            </Container>
-                                        </div>
-                                        <ProfileConfigure />
-                                    </appStateContext.Provider>
+                                    <ResponsiveDrawer handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
+                                    <div className={classes.mainContent}>
+                                        <Container>
+                                            <Suspense fallback={<LinearProgress />}>
+                                                <Switch >
+                                                    <Route path='/result' component={Result} />
+                                                    <Route path='/students' component={Students} />
+                                                    <Route path='/teachers' component={Teachers} />
+                                                    <Route path='/classes' component={Classes} />
+                                                    <Route path='/' component={Home} exact />
+                                                </Switch>
+                                            </Suspense>
+                                        </Container>
+                                    </div>
+                                    { props.isProfileComplet ? null : <ProfileConfigure /> }
                                 </React.Fragment>
                                 :
                                 <div className={classes.mainContent}>
                                     <Route path='/login' exact><LoginPage /></Route>
                                 </div>
                         }
-                </div>
+                    </div>
             </Router>
         </div>
     );
 }
 
-export default App;
+export default connect(state => (state.user), { fetchUser })(App);

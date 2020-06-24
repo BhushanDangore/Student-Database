@@ -4,6 +4,9 @@ import ReactDOM from 'react-dom';
 import { useLocalStorage } from 'react-use';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core';
 
+import { Provider } from "react-redux";
+import Store from './Reducers/store'
+
 import App from './App';
 
 import * as serviceWorker from './serviceWorker';
@@ -27,7 +30,9 @@ function AppWithTheme() {
 
     return (
         <ThemeProvider theme={theme} >
-            <App darkMode={darkMode} setDarkMode={setDarkMode} />
+            <Provider store={Store}>
+                <App darkMode={darkMode} setDarkMode={setDarkMode} />
+            </Provider>
         </ThemeProvider>
     )
 }
