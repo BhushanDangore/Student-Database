@@ -1,5 +1,5 @@
 import React from 'react'
-import { withStyles, TableContainer, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
+import { withStyles, TableContainer, Table, TableHead, TableBody, TableCell, TableRow, LinearProgress } from '@material-ui/core';
 import { Link, useRouteMatch } from 'react-router-dom';
 
 const StyledTableRow = withStyles((theme) => ({
@@ -22,7 +22,7 @@ function FormatedTable({ tableData, size = "medium", formatting, linkPathIdentif
     }
 
     let { url } = useRouteMatch();
-
+    
     return (
         <TableContainer>
             <Table size={size} component='div' stickyHeader >
@@ -35,6 +35,7 @@ function FormatedTable({ tableData, size = "medium", formatting, linkPathIdentif
                 </TableHead>
                 <TableBody component='div' >
                     {
+                        tableData === null ? <LinearProgress /> :
                         tableData.length === 0 ? <TableRow component='div'  ><TableCell component='div' style={{borderBottom: "none"}} >No Record Found.</TableCell></TableRow> :
                         tableData.map((obj, indx) => {
                                     return (linkPathIdentifire ? 

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import { Divider, Drawer, Hidden, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
@@ -8,7 +8,7 @@ import ClassIcon from '@material-ui/icons/Class';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { toggleDrawer, cloaseDrawer } from '../Actions'
+import { cloaseDrawer } from '../Actions'
 
 const drawerWidth = 240;
 const container = window.document.body;

@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 const tableFormatting = [{name: "Name", property: "name"}, {name: "Roll No", property: "rollNo"}, {name: "Class", property: 'className'}];
 const refreshBtnStyles = {display: 'flex', flexDirection: 'row-reverse', margin: '10px 0'};
 
-function Students({ studentsArray, classesArray, classesCount, fetchStudents, fetchClasses }) {
+function Students({ studentsArray, isAllStudentsFetched, classesArray, classesCount, fetchStudents, fetchClasses }) {
 
     const [config, setConfig] = useState({
         addStudentDialogOpen: false,
@@ -24,7 +24,7 @@ function Students({ studentsArray, classesArray, classesCount, fetchStudents, fe
     })
 
     useEffect(()=> {
-        if(studentsArray === null) fetchStudents();
+        if(studentsArray === null || !isAllStudentsFetched) fetchStudents();
         if(classesArray === null) fetchClasses();
     // eslint-disable-next-line
     },[])

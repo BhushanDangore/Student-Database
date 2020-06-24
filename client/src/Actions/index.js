@@ -9,7 +9,8 @@ import {
     GET_CLASS_STUDENTS,
     SET_SCHOOL_NAME,
     TOGGLE_DRAWER,
-    CLOSE_DRAWER
+    CLOSE_DRAWER,
+    FEED_CLASS_STUDENTS_ARRAY,
 } from './types';
 
 export const toggleDrawer = { type: TOGGLE_DRAWER }
@@ -44,6 +45,13 @@ export function fetchClassStudents(className){
         axios.get(`/api/classes/class/${className}`)
             .then(res => dispatch({type: GET_CLASS_STUDENTS, payload: res.data}))
             .catch(res => dispatch({ type: REQUEST_FAILED, payload: res.data }))
+    }
+}
+
+export function feedClassStudentsArray(students, classIndex) {
+    return {
+        type: FEED_CLASS_STUDENTS_ARRAY,
+        payload: { students, classIndex }
     }
 }
 

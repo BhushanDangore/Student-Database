@@ -4,43 +4,55 @@ import { useParams } from 'react-router'
 import FormatedTable from './Miniatures/FormatedTable';
 import { Typography, LinearProgress } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { fetchClassStudents } from '../Actions';
+import { fetchClassStudents, feedClassStudentsArray } from '../Actions';
 
 const tableFormatting = [{name: "Student Name", property: 'name'}, {name: "Roll Number", property: 'rollNo'}, {name: "Mobile Number", property: 'studentMobileNo'}]
 
-function ClassPage({ studentsArray, fetchClassStudents }) {
+function ClassPage({ classesArray, dispatch, studentsArray }) {
     let { class_name } = useParams();
 
-    let reducedStudentsObject;
+    let indexOfCurrentClass;
 
-    useEffect(() => {
-        fetchClassStudents(class_name);
-        // eslint-disable-next-line
-    },[])
-    
-    const createReducedInfoArray = () => {
-        let students = [];
-        if(!studentsArray) return [];
-        studentsArray.forEach(stud => {
-            if(stud.class.className === class_name)
-            students.push((({
-                name: { firstName, lastName },
-                rollNo,
-                studentMobileNo,
-                class : {className}
-            }) => ({name: `${firstName} ${lastName}`, rollNo, studentMobileNo, className }))(stud))
-        });
-        return students;
+    if(classesArray) {
+        classesArray.forEach((_class, index) => {
+            if(_class.className === class_name) return indexOfCurrentClass = index;
+        })
     }
 
-    reducedStudentsObject = React.useMemo(createReducedInfoArray, [studentsArray]);
+    let currentClass;
+    if( classesArray ) currentClass = classesArray[indexOfCurrentClass];
+
+    useEffect(() => {
+        if(currentClass && !currentClass.isClassStudentsFetched) dispatch(fetchClassStudents(class_name))
+    })
+
+    useEffect(() => {
+        
+        if(currentClass && currentClass.isClassStudentsFetched && studentsArray && !currentClass.classStudents) dispatch(feedClassStudentsArray(studentsArray, indexOfCurrentClass))
+
+    }, [classesArray])
     
+    const currentClassStudents = React.useMemo(() => {
+        if(classesArray && classesArray[indexOfCurrentClass].classStudents) {
+            let currClassStudents = [];
+            classesArray[indexOfCurrentClass].classStudents.forEach(index => {
+                let student = {...studentsArray[index]};
+                let { name } = student;
+                student.name = `${name.firstName} ${name.lastName}`;
+                currClassStudents.push(student);
+            })
+            console.log(currClassStudents)
+            return currClassStudents;
+        }    
+        else return null;
+    }, [studentsArray, classesArray])
+
     return (
         <PageContainer noFab={true} pageTitle={`Class`} >
             <Typography variant="h6" gutterBottom >Students </Typography>
-            { studentsArray === null ? <LinearProgress /> : <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} /> }
+            { studentsArray === null ? <LinearProgress /> : <FormatedTable tableData={ currentClassStudents } formatting={tableFormatting} /> }
         </PageContainer>
     )
 }
 
-export default connect(store => ({...store.classes, studentsArray: store.students.studentsArray}), { fetchClassStudents })(ClassPage)
+export default connect(store => ({...store.classes, ...store.students}), dispatch => ({ dispatch }))(ClassPage)
