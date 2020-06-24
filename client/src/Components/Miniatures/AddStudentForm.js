@@ -42,9 +42,25 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
         delete student.FName;
         delete student.LName;
         delete student.MName;
-        student.name = { FName, LName, MName }
-
-        //TODO: add save here.
+        const keyMap = { 
+            MotherName: "motherName",
+            FatherName: "fatherName",
+            dateBirthday: "DOB",
+            dateAdmission: "admissionDate",
+            MNumber: "studentMobileNo",
+            MPNumber: "parentMobileNo",
+            MPNumber2: "parentMobileNo2",
+            ANumber: "aadharNumber",
+            ACCNO: "accountNo",
+            IFSC: "IFSC",
+            caste: "caste",
+            category: "category",
+            gender: "gender",
+            class: "class",
+        }
+        const mappedData = Object.keys(keyMap).reduce((obj, k) => Object.assign(obj, { [keyMap[k]]: student[k] }),{});
+        mappedData.name = { firstName: FName, lastName: LName, middleName: MName }
+        saveNewStudentData(mappedData)
     }
 
     const closeForm = () => {
@@ -68,14 +84,14 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                             label='First Name'
                             name="FName"
                             inputRef={register({ required: true, min: 3 })}
-                            error={errors.FName}  />
+                            error={errors.FName ? true : false}  />
 
                         <TextField
                             placeholder='Last Name'
                             label='Last Name'
                             name="LName"
                             inputRef={register({ required: true, min: 3 })}
-                            error={errors.LName}  />
+                            error={errors.LName ? true : false}  />
                     </div>
 
                     <TextField
@@ -84,7 +100,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                         variant='outlined'
                         name="MName"
                         inputRef={register({ required: true, min: 3 })}
-                        error={errors.MName}  />
+                        error={errors.MName ? true : false}  />
 
                     <TextField
                         placeholder='Father Name'
@@ -92,7 +108,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                         variant='outlined'
                         name="FatherName"
                         inputRef={register({ required: true, min: 5 })}
-                        error={errors.FatherName}  />
+                        error={errors.FatherName ? true : false}  />
 
                     <TextField
                         placeholder='Mother Name'
@@ -100,8 +116,8 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                         variant='outlined'
                         name="MotherName"
                         inputRef={register({ required: true, min: 5 })}
+                        error={errors.MotherName ? true : false}  />
 
-                        error={errors.MotherName}  />
                     <TextField
                         placeholder='Mobile Number'
                         label='Mobile Number'
@@ -109,7 +125,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                         type='number'
                         name="MNumber"
                         inputRef={register({ required: true, minLength: 1, maxLength: 10 })}
-                        error={errors.MNumber}  />
+                        error={errors.MNumber ? true : false}  />
 
                     <div className={classes.multifields}>
 
@@ -119,7 +135,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                             type='number'
                             name="MPNumber"
                             inputRef={register({ required: true, minLength: 10, maxLength: 10 })}
-                            error={errors.MPNumber}  />
+                            error={errors.MPNumber ? true : false}  />
 
                         <TextField
                             placeholder='Parents Contact 2'
@@ -128,7 +144,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                             type='number'
                             name="MPNumber2"
                             inputRef={register({ required: false, minLength: 10, maxLength: 10 })}
-                            error={errors.MPNumber2}  />
+                            error={errors.MPNumber2 ? true : false}  />
 
                     </div>
                     <TextField
@@ -139,7 +155,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                         variant='outlined'
                         name="ANumber"
                         inputRef={register({ required: true, minLength: 12, maxLength: 12 })}
-                        error={errors.ANumber}  />
+                        error={errors.ANumber ? true : false}  />
 
                     <div className={classes.multifields}>
                         <InputLabel htmlFor="Gender">Gender</InputLabel>
@@ -147,7 +163,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                             label='Gender'
                             name="gender"
                             inputRef={register({ required: true })}
-                            error={errors.gender}
+                            error={errors.gender ? true : false}
                         >
                             <option >Male</option>
                             <option>Female</option>
@@ -160,7 +176,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                             label='Category'
                             name="category"
                             inputRef={register({ required: true })}
-                            error={errors.category}
+                            error={errors.category ? true : false}
                         >
                             <option>OBC</option>
                             <option>SC</option>
@@ -171,9 +187,9 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                         <InputLabel htmlFor="Class">Class</InputLabel>
                         <NativeSelect
                             label='Class'
-                            name="class1"
+                            name="class"
                             inputRef={register({ required: true })}
-                            error={errors.class1}
+                            error={errors.class1 ? true : false}
                         >
                             {
                                 props.classesArray === null ? null : props.classesArray.map((elm, index) => (<option key={index} >{elm.className}</option>))
@@ -186,7 +202,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                         variant='outlined'
                         name="caste"
                         inputRef={register({ required: true, min: 3 })}
-                        error={errors.caste}  />
+                        error={errors.caste ? true : false}  />
 
                     <div className={classes.multifields}>
                         <TextField
@@ -199,7 +215,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            error={errors.dateBirthday}  />
+                            error={errors.dateBirthday ? true : false}  />
 
                         <TextField
                             name="dateAdmission"
@@ -211,7 +227,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                             InputLabelProps={{
                                 shrink: true,
                             }}
-                            error={errors.dateAdmission}  />
+                            error={errors.dateAdmission ? true : false}  />
                     </div>
 
                     <TextField
@@ -221,7 +237,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                         type='number'
                         name="ACCNO"
                         inputRef={register({ required: true, minLength: 10, maxLength: 12 })}
-                        error={errors.ACCNO}  />
+                        error={errors.ACCNO ? true : false}  />
 
                     <TextField
                         placeholder='IFSC'
@@ -230,7 +246,7 @@ function AddStudentForm({ open, toggleFAB, saveNewStudentData, ...props }) {
                         name="IFSC"
                         inputRef={register({ required: true, min: 8 })}
 
-                        error={errors.IFSC}  />
+                        error={errors.IFSC ? true : false}  />
                     <Button
                         fullWidth
                         color='secondary'

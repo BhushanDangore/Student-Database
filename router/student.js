@@ -26,7 +26,7 @@ Router.route("/")
         try {
             const classInDB = await classModel.findOne({ className: data.class });      // GET THE ID OF THE CLASS USER WANT TO SAVE.
 
-            classID = classInDB.id;
+            classID = classInDB._id;
             let student = new studentModel({
                 name: {
                     firstName: data.name.firstName,
@@ -52,7 +52,7 @@ Router.route("/")
             })
             student.save(async (err, student) => {
                 
-                if (err) res.status(503).send({msg: FAILED_TO_SET_INFO})
+                if (err) { console.log(err); return res.status(503).send({msg: FAILED_TO_SET_INFO}) }
                 
                 req.user.students.push(student.id);
                 classInDB.students.push(student.id);
