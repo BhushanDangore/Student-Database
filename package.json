@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "build": "npm install && cd ./client && npm install && npm run build && cd .."
+    "build": "npm install && cd ./client && npm install && npm run build && cd ..",
+    "dev": "nodemon start -i ./client"
   },
   "author": "",
   "license": "ISC",
@@ -21,5 +22,8 @@
     "passport": "^0.4.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }

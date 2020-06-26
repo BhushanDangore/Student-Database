@@ -19,12 +19,9 @@ export default function (state = initialState, action) {
                 return true;
             });
 
-            if(!unExistedStudents.length) {
-                console.error("No new students are fetched");
-                return state;
-            };
-            console.log("new students are fetched");
-            return { ...state, studentsArray: [...state.studentsArray, ...unExistedStudents] };
+            if(unExistedStudents.length) return { ...state, studentsArray: [...state.studentsArray, ...unExistedStudents] };
+            
+            return state;
 
         default:
             return state;

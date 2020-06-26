@@ -9,6 +9,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Home, AppBar, ProfileConfigure, LoginPage } from './Components';
 import { connect } from "react-redux";
 import { fetchUser } from './Actions/index';
+import ErrorSnackBar from './Components/Miniatures/ErrorSnackBar';
 
 const Students = lazy(() => import('./Components/Students'));
 const Result = lazy(() => import('./Components/Result'));
@@ -92,6 +93,7 @@ function App(props) {
                         }
                 </div>
             </Router>
+            <ErrorSnackBar />
         </div>
     );
 }

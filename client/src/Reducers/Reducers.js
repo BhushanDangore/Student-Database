@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
 import user from './user';
 import classes from './classes';
-import students from './students'
-import config from './config'
+import students from './students';
+import config from './config';
+import errors from './errors';
 import { GET_CLASS_STUDENTS, GET_STUDENTS } from './../Actions/types';
 
 const combination = combineReducers({
@@ -10,6 +11,7 @@ const combination = combineReducers({
     classes: classes,
     students: students,
     config: config,
+    errors: errors,
 })
 
 export default (store, action) => {

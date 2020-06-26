@@ -23,14 +23,17 @@ function ClassPage({ classesArray, dispatch, studentsArray }) {
     if( classesArray ) currentClass = classesArray[indexOfCurrentClass];
 
     useEffect(() => {
-        if(currentClass && !currentClass.isClassStudentsFetched) dispatch(fetchClassStudents(class_name))
-    })
+        if(currentClass) dispatch(fetchClassStudents(class_name))
+    },[])
 
     useEffect(() => {
-        
-        if(currentClass && currentClass.isClassStudentsFetched && studentsArray && !currentClass.classStudents) dispatch(feedClassStudentsArray(studentsArray, indexOfCurrentClass))
-
-    }, [classesArray])
+        if(currentClass && 
+            currentClass.isClassStudentsFetched && 
+            studentsArray && 
+            !currentClass.classStudents) 
+            dispatch(feedClassStudentsArray(studentsArray, indexOfCurrentClass))
+        // eslint-disable-next-line
+    }, [classesArray, studentsArray])
     
     const currentClassStudents = React.useMemo(() => {
         if(classesArray && classesArray[indexOfCurrentClass].classStudents) {
@@ -41,16 +44,16 @@ function ClassPage({ classesArray, dispatch, studentsArray }) {
                 student.name = `${name.firstName} ${name.lastName}`;
                 currClassStudents.push(student);
             })
-            console.log(currClassStudents)
             return currClassStudents;
         }    
         else return null;
-    }, [studentsArray, classesArray])
-
+         // eslint-disable-next-line
+        }, [classesArray, studentsArray])
+        
     return (
         <PageContainer noFab={true} pageTitle={`Class`} >
             <Typography variant="h6" gutterBottom >Students </Typography>
-            { studentsArray === null ? <LinearProgress /> : <FormatedTable tableData={ currentClassStudents } formatting={tableFormatting} /> }
+            { studentsArray === null || currentClassStudents === null ? <LinearProgress /> : <FormatedTable tableData={ currentClassStudents } formatting={tableFormatting} /> }
         </PageContainer>
     )
 }

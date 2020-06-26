@@ -19,16 +19,15 @@ export const cloaseDrawer = { type: CLOSE_DRAWER }
 export function fetchUser() {
     return function (dispatch) {
       axios.get("/api/user")
-        .then(res => {
-            return dispatch({type: GET_USER, payload: res.data})
-        })
+        .then(res => dispatch({type: GET_USER, payload: res.data}))
+        .catch(res => dispatch({ type: REQUEST_FAILED, payload: res }))
 }}
 
 export function fetchStudents(){
     return function (dispatch) {
         axios.get('/api/students/')
             .then( res => dispatch({ type: GET_STUDENTS, payload: res.data }))
-            .catch( res => dispatch({ type: REQUEST_FAILED, payload: res.data }))
+            .catch( res => dispatch({ type: REQUEST_FAILED, payload: res }))
     }
 }
 
@@ -36,7 +35,7 @@ export function fetchClasses(){
     return function (dispatch) {
         axios.get('/api/classes/')
             .then( res => dispatch({ type: GET_CLASSES, payload: res.data }))
-            .catch( res => dispatch({ type: REQUEST_FAILED, payload: res.data }))
+            .catch( res => dispatch({ type: REQUEST_FAILED, payload: res }))
     }
 }
 
@@ -44,7 +43,7 @@ export function fetchClassStudents(className){
     return function(dispatch) {
         axios.get(`/api/classes/class/${className}`)
             .then(res => dispatch({type: GET_CLASS_STUDENTS, payload: res.data}))
-            .catch(res => dispatch({ type: REQUEST_FAILED, payload: res.data }))
+            .catch(res => dispatch({ type: REQUEST_FAILED, payload: res }))
     }
 }
 
@@ -68,7 +67,7 @@ export function saveNewClassData(data){
             data: JSON.stringify(data),
         })
         .then(res => dispatch({ type: SAVE_CLASS, payload: res.data }))
-        .catch( res => dispatch({ type: REQUEST_FAILED, payload: res.data }))
+        .catch( res => dispatch({ type: REQUEST_FAILED, payload: res }))
     }
 }
 
@@ -85,7 +84,7 @@ export function saveNewStudentData(data){
             data: JSON.stringify(data),
         })
         .then( res => dispatch({ type: SAVE_STUDENT, payload: res.data }))
-        .catch( res => dispatch({ type: REQUEST_FAILED, payload: res.data }) )
+        .catch( res => dispatch({ type: REQUEST_FAILED, payload: res }) )
     }
 
 }
@@ -108,7 +107,7 @@ export function saveProfileConfiguration(data){
             }
         })
         .catch( res => {
-            dispatch({type: REQUEST_FAILED, payload: res.data})
+            dispatch({type: REQUEST_FAILED, payload: res})
         })
     }
 }

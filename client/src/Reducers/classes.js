@@ -19,10 +19,8 @@ export default function (state = initialState, action) {
             return { ...state, classesArray: action.payload }
 
 
-
         case SAVE_CLASS: 
             return { ...state, classesArray: action.payload }
-
 
 
         case GET_CLASS_STUDENTS:
@@ -30,11 +28,12 @@ export default function (state = initialState, action) {
             classesArray.forEach(_class => {
                 if(action.payload.className === _class.className) _class.isClassStudentsFetched = true;
             })
-            return { ...state, classesArray };
-            
+            if(classesArray.length) return { ...state, classesArray };
+            return state;
 
 
         case FEED_CLASS_STUDENTS_ARRAY:
+            
             let { classIndex, students } = action.payload;
             let currClass = { ...state.classesArray[classIndex] }
             let indexces = [];

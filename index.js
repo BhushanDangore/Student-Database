@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cookieParser())
 app.use(require('express-session')({
     cookie : {
-    maxAge: 3600000, 
+    maxAge: 7200000,
     secure: false
   },
     secret: 'akuiwdy786tyfgdcxdswe4r5tyuikjio9876',
