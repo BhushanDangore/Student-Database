@@ -8,8 +8,8 @@ import { GET_CLASS_STUDENTS, GET_STUDENTS } from './../Actions/types';
 
 const combination = combineReducers({
     user: user, 
-    classes: classes,
     students: students,
+    classes: classes,
     config: config,
     errors: errors,
 })

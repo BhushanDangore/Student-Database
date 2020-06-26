@@ -1,8 +1,6 @@
 import { 
     GET_CLASSES,
     SAVE_CLASS,
-    GET_CLASS_STUDENTS, 
-    FEED_CLASS_STUDENTS_ARRAY,
 } from './../Actions/types';
 
 const initialState = {
@@ -19,38 +17,10 @@ export default function (state = initialState, action) {
             return { ...state, classesArray: action.payload }
 
 
-        case SAVE_CLASS: 
+        case SAVE_CLASS:                                                        //TODO: The API should return just the newely created class.
             return { ...state, classesArray: action.payload }
 
 
-        case GET_CLASS_STUDENTS:
-            let classesArray = [...state.classesArray];
-            classesArray.forEach(_class => {
-                if(action.payload.className === _class.className) _class.isClassStudentsFetched = true;
-            })
-            if(classesArray.length) return { ...state, classesArray };
-            return state;
-
-
-        case FEED_CLASS_STUDENTS_ARRAY:
-            
-            let { classIndex, students } = action.payload;
-            let currClass = { ...state.classesArray[classIndex] }
-            let indexces = [];
-
-            students.forEach((student, index) => {
-                if(student.class.className === currClass.className){
-                    indexces.push(index);
-                }
-            })
-
-            currClass.classStudents = indexces;
-
-            let newClassesArray = [...state.classesArray];
-            newClassesArray[classIndex] = currClass;
-
-            return {...state, classesArray: newClassesArray};
-            
         default:
             return state;
     }

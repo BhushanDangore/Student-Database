@@ -10,11 +10,12 @@ import {
     SET_SCHOOL_NAME,
     TOGGLE_DRAWER,
     CLOSE_DRAWER,
-    FEED_CLASS_STUDENTS_ARRAY,
+    FILTER_CLASS_STUDENTS,
 } from './types';
 
 export const toggleDrawer = { type: TOGGLE_DRAWER }
 export const cloaseDrawer = { type: CLOSE_DRAWER }
+export const filterClassStudents = (students, classIndex) => ({type: FILTER_CLASS_STUDENTS, payload: { students, classIndex }})
 
 export function fetchUser() {
     return function (dispatch) {
@@ -41,16 +42,17 @@ export function fetchClasses(){
 
 export function fetchClassStudents(className){
     return function(dispatch) {
-        axios.get(`/api/classes/class/${className}`)
-            .then(res => dispatch({type: GET_CLASS_STUDENTS, payload: res.data}))
-            .catch(res => dispatch({ type: REQUEST_FAILED, payload: res }))
-    }
-}
-
-export function feedClassStudentsArray(students, classIndex) {
-    return {
-        type: FEED_CLASS_STUDENTS_ARRAY,
-        payload: { students, classIndex }
+        return new Promise((resolve, reject) => {
+            axios.get(`/api/classes/class/${className}`)
+                .then(res => {
+                    dispatch({type: GET_CLASS_STUDENTS, payload: res.data})
+                    resolve();
+                })
+                .catch(res => {
+                    dispatch({ type: REQUEST_FAILED, payload: res })
+                    reject();
+                })
+        }) 
     }
 }
 
