@@ -16,7 +16,6 @@ Router.get("/", async (req, res) => {
 })
 
 Router.get("/class/:id", async (req, res) => {
-
     if(!req.user) return res.status(401).send({msg: NOT_LOGGED_IN});
 
     try{

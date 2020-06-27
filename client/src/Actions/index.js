@@ -4,6 +4,7 @@ import {
     REQUEST_FAILED, 
     GET_CLASSES, 
     GET_STUDENTS, 
+    GET_TEACHERS, 
     SAVE_STUDENT, 
     SAVE_CLASS, 
     GET_CLASS_STUDENTS,
@@ -11,6 +12,7 @@ import {
     TOGGLE_DRAWER,
     CLOSE_DRAWER,
     FILTER_CLASS_STUDENTS,
+    SAVE_TEACHER
 } from './types';
 
 export const toggleDrawer = { type: TOGGLE_DRAWER }
@@ -36,6 +38,14 @@ export function fetchClasses(){
     return function (dispatch) {
         axios.get('/api/classes/')
             .then( res => dispatch({ type: GET_CLASSES, payload: res.data }))
+            .catch( res => dispatch({ type: REQUEST_FAILED, payload: res }))
+    }
+}
+
+export function fetchTeachers(){
+    return function (dispatch) {
+        axios.get('/api/teachers/')
+            .then( res => dispatch({ type: GET_TEACHERS, payload: res.data }))
             .catch( res => dispatch({ type: REQUEST_FAILED, payload: res }))
     }
 }
@@ -70,6 +80,23 @@ export function saveNewClassData(data){
         })
         .then(res => dispatch({ type: SAVE_CLASS, payload: res.data }))
         .catch( res => dispatch({ type: REQUEST_FAILED, payload: res }))
+    }
+}
+
+export function saveNewTeacherData(data){
+    return function(dispatch) {
+        axios({
+            method: 'POST',
+            url: '/api/teachers/teacher',
+            headers: {
+                'Content-Type' : 'application/json; charset=UTF-8',
+                'Accept': 'Token',
+                "Access-Control-Allow-Origin": "*",
+            },
+            data: JSON.stringify(data),
+        })
+        .then(res => dispatch({type: SAVE_TEACHER, payload: res.data }))
+        .catch(res => dispatch({type: REQUEST_FAILED, payload: res }))
     }
 }
 

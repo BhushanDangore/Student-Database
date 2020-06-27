@@ -4,6 +4,7 @@ import classes from './classes';
 import students from './students';
 import config from './config';
 import errors from './errors';
+import teachers from './teachers'
 import { GET_CLASS_STUDENTS, GET_STUDENTS } from './../Actions/types';
 
 const combination = combineReducers({
@@ -12,6 +13,7 @@ const combination = combineReducers({
     classes: classes,
     config: config,
     errors: errors,
+    teachers: teachers,
 })
 
 export default (store, action) => {

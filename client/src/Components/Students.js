@@ -67,7 +67,7 @@ function Students({ studentsArray, isAllStudentsFetched, classesArray, classesCo
                             <Button onClick={refresh}  variant="outlined" disabled={studentsArray === null} >Refresh</Button>
                         </div>
                         {
-                            studentsArray === null ? <LinearProgress /> :
+                            studentsArray === null || !isAllStudentsFetched  ? <LinearProgress /> :
                             <div>
                                 {
                                     <FormatedTable tableData={reducedStudentsObject} formatting={tableFormatting} />

@@ -29,6 +29,7 @@ app.use("/api", require("./router/root"));
 app.use("/api/user", require("./router/user.js"));
 app.use("/api/students", require("./router/student.js"));
 app.use("/api/classes", require("./router/classes.js"));
+app.use("/api/teachers", require("./router/teachers.js"));
 
 app.use("/api/*", function(req, res){
     res.status(404).send("No Route Found");

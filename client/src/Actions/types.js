@@ -10,6 +10,7 @@ export const GET_STUDENTS = "GET_STUDENTS";
 export const SAVE_STUDENT = "SAVE_STUDENT";
 
 export const GET_TEACHERS = "GET_TEACHERS";
+export const SAVE_TEACHER = "SAVE_TEACHER";
 
 export const SET_LOADING = "SET_LOADING";
 export const SET_STUDENTS_LOADING = "SET_STUDENTS_LOADING";

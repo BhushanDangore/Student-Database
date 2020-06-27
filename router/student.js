@@ -1,10 +1,10 @@
 const Router = require('express').Router();
-const { studentModel, userModel, classModel } = require('../database/schemas');
-const {  NOT_LOGGED_IN, FAILED_TO_SET_INFO, DATA_SAVED } = require("../Utils/messages");
+const { studentModel, classModel } = require('../database/schemas');
+const {  NOT_LOGGED_IN, FAILED_TO_SET_INFO } = require("../Utils/messages");
 
 Router.route("/")
     .get(async (req, res) => {
-        if (!req.user) res.status(401).send({msg: NOT_LOGGED_IN});
+        if (!req.user) return res.status(401).send({msg: NOT_LOGGED_IN});
         
         try{
             const user = await req.user.populate({ 

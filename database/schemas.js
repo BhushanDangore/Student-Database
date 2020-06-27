@@ -88,10 +88,14 @@ const classSchema = new Schema({
 const teacherSchema = new Schema({
     name: {
         type: String,
+        minlength: 3,
+        maxlength: 25,
         trim: true,
     },
     contactNo: {
         type: Number,
+        minlength: 10,
+        maxlength: 12,
         required: true,
     },
     classTeacherof: {
@@ -100,7 +104,8 @@ const teacherSchema = new Schema({
     },
     email: {
         type: String,
-        required: true
+        minlength: 6,
+        required: true,
     }
 })
 

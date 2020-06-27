@@ -35,7 +35,7 @@ function ErrorSnackBar({errorMsg, status}) {
 
     const getButtonText = () => {
         switch(status){
-            case 401: return "Login Again";
+            case 401: return "Login Again.";
             default: return "Close";
         }
     }
