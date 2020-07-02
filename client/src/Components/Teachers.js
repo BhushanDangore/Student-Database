@@ -20,6 +20,10 @@ function Teachers({teachers, fetchTeachers}) {
         if(!teachers.teachersArray) fetchTeachers();
     },[])
 
+    useEffect(()=> {
+        setAddTeacherFormOpen(false);
+    }, [teachers.teachersArray])
+
     return (
         <Fragment>
             <PageContainer onFabClick= {toggleFab} pageTitle="Teachers Section" >

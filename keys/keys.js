@@ -5,6 +5,7 @@ if(process.env.NODE_ENV == 'production'){
             ClientSecret: process.env.ClientSecret
         },
         mongoURI: process.env.mongoURI,
+        cookieSecret: process.env.cookieSecret,
     }
     module.exports = keys
 }

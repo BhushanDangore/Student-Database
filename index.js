@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require("cookie-parser");
 const { passport } = require("./passport/serializeDeserialize");
 const path = require('path');
+const { cookieSecret } = require('./keys/keys');
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(require('express-session')({
     maxAge: 7200000,
     secure: false
   },
-    secret: 'akuiwdy786tyfgdcxdswe4r5tyuikjio9876',
+    secret: cookieSecret,
     resave: false,
     saveUninitialized: true
 }));

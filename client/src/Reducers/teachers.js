@@ -9,7 +9,7 @@ export default function(state = initialState, action) {
             return { teachersArray: [...action.payload.teachers] }
 
         case SAVE_TEACHER:
-            return { ...state, teachersArray: [...state.teachersArray, action.payload] }
+            return { ...state, teachersArray: [...state.teachersArray, action.payload.teacher] }
 
         default: return state;
     }
