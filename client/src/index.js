@@ -18,12 +18,19 @@ function AppWithTheme() {
         return createMuiTheme({
             palette: {
                 primary: {
-                    main: '#576767',
+                    main:  darkMode ? '#2e5b5b' : "#1f4141",
                 },
                 secondary: {
-                    main: '#e45e2a',
+                    main: '#a05a00',
                 },
                 type: darkMode ? 'dark' : 'light',
+                background: {
+                    paper: darkMode ? "#242c2d" : "#efefef",
+                    default: darkMode ? "#161e1d" : "#d6d6d6",
+                },
+                action: {
+                    focus: "red"
+                }
             }
         })
     }, [darkMode])

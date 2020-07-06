@@ -23,7 +23,7 @@ function PageContainer(props) {
     return (
         <React.Fragment>
             <Paper variant="outlined" className={classes.root} >
-                <Typography variant='h4' color='textSecondary' display='inline'>{ pageTitle }</Typography>
+                <Typography variant='h4' color='textSecondary' display='inline'>{ pageTitle || "" }</Typography>
                 <Divider style={{ margin: "15px 0px" }} />
                 {
                     props.children
