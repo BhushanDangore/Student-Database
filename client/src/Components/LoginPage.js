@@ -29,6 +29,7 @@ function LoginPage() {
     return (
         <div className={classes.root} >
             <div className={classes.form}>
+                <p >Email and password authentication is in development Google OAuth is active. </p>
                 <TextField 
                     label='Email'
                     placeholder='Email ID' 
