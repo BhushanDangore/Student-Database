@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => {
         mainContent: {
             padding: '75px 0 0 0',
             flex: 1,
+            overflow: "hidden",
         }
     }
 });

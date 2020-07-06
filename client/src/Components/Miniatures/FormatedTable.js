@@ -24,7 +24,7 @@ function FormatedTable({ tableData, size = "medium", formatting, linkPathIdentif
     let { url } = useRouteMatch();
     
     return (
-        <TableContainer>
+        <TableContainer >
             <Table size={size} component='div' stickyHeader >
                 <TableHead component='div'>
                     <StyledTableRow component='div'>

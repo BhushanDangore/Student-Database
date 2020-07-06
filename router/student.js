@@ -24,7 +24,7 @@ Router.route("/")
 
         const data = req.body;
         try {
-            const classInDB = await classModel.findOne({ className: data.class });      // GET THE ID OF THE CLASS USER WANT TO SAVE.
+            const classInDB = await classModel.findOne({ className: data.class, belongsTo: req.user._id });      // GET THE ID OF THE CLASS USER WANT TO SAVE.
 
             classID = classInDB._id;
             let student = new studentModel({

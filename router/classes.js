@@ -19,7 +19,7 @@ Router.get("/class/:id", async (req, res) => {
     if(!req.user) return res.status(401).send({msg: NOT_LOGGED_IN});
 
     try{
-        const Class = await classModel.findOne({className: req.params.id, belongsTo: req.user.id}, "-_id -belongsTo -__v")
+        const Class = await classModel.findOne({className: req.params.id, belongsTo: req.user._id}, "-_id -belongsTo -__v")
         
         const classWithStudents = await Class.populate({path: 'students', model: 'Student', select: '-_id -belongsTo -__v', populate: { path: 'class', select: '-_id -belongsTo -__v -students' } }).execPopulate();
 
