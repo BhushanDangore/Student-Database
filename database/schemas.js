@@ -106,6 +106,10 @@ const teacherSchema = new Schema({
         type: String,
         minlength: 6,
         required: true,
+    },
+    belongsTo: {
+        type: Schema.Types.ObjectId,
+        ref: 'Admin'
     }
 })
 

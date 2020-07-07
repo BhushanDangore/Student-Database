@@ -27,7 +27,8 @@ Router.post('/teacher', async (req, res) => {
         let newTeacher = new teacherModel({
             name: name,
             contactNo: mobile,
-            email: email
+            email: email,
+            belongsTo: req.user._id
         })
 
         let savedTeacher = await newTeacher.save()

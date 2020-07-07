@@ -11,6 +11,7 @@ import {
     SET_SCHOOL_NAME,
     TOGGLE_DRAWER,
     CLOSE_DRAWER,
+    SAVE_UPDATED_CLASS,
     FILTER_CLASS_STUDENTS,
     SAVE_TEACHER
 } from './types';
@@ -58,11 +59,47 @@ export function fetchClassStudents(className){
                     dispatch({type: GET_CLASS_STUDENTS, payload: res.data})
                     resolve();
                 })
-                .catch(res => {
-                    dispatch({ type: REQUEST_FAILED, payload: res })
-                    reject();
-                })
+                .catch(res => dispatch({ type: REQUEST_FAILED, payload: res }))
         }) 
+    }
+}
+
+export function saveNewClassInfo(data, className) {
+    return function(dispatch) {
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'PUT',
+                url: `/api/classes/class/${className}`,
+                headers: {
+                    'Content-Type' : 'application/json; charset=UTF-8',
+                    'Accept': 'Token',
+                    "Access-Control-Allow-Origin": "*",
+                },
+                data: JSON.stringify(data),
+            })
+            .then(res => {
+                dispatch({ type: SAVE_UPDATED_CLASS, payload: res.data });
+                resolve();
+            })
+            .catch( res => dispatch({ type: REQUEST_FAILED, payload: res }))
+        })
+    }
+}
+
+export function saveUpdatedClassDetails(data){
+    return function(dispatch) {
+        axios({
+            method: 'POST',
+            url: '/api/classes/class',
+            headers: {
+                'Content-Type' : 'application/json; charset=UTF-8',
+                'Accept': 'Token',
+                "Access-Control-Allow-Origin": "*",
+            },
+            data: JSON.stringify(data),
+        })
+        .then(res => dispatch({ type: SAVE_CLASS, payload: res.data }))
+        .catch( res => dispatch({ type: REQUEST_FAILED, payload: res }))
     }
 }
 

@@ -22,7 +22,7 @@ export default function (state = initialState, action) {
 
             let rcvdClassStudents = action.payload.students;
             const unExistedStudents = rcvdClassStudents.filter(student => {                     // Check if the student already exist on client side
-                for(const stateStudent of state.studentsArray) if(stateStudent.aadharNumber === student.aadharNumber) return false; 
+                for(const stateStudent of state.studentsArray) if(stateStudent.aadharNumber === student.aadharNumber && student.class.className === stateStudent.class.className) return false; 
                 return true;
             });
             defineNameGetter(unExistedStudents);
